@@ -1,0 +1,114 @@
+================================================================================
+IWRC SEED FUND TRACKING - STATIC VISUALIZATIONS FILE INVENTORY
+================================================================================
+Generated: 2025-11-23
+Directory: /Users/shivpat/Downloads/Seed Fund Tracking/visualizations/static/
+Script: /Users/shivpat/Downloads/Seed Fund Tracking/scripts/generate_all_static_visualizations.py
+
+================================================================================
+PRIMARY VISUALIZATIONS (10 files - Publication Ready at 300 DPI)
+================================================================================
+
+1. REVIEW_EXECUTIVE_SUMMARY.png (324 KB)
+   - Dimensions: 11.4 x 8.9 inches (3420 x 2670 px)
+   - Main infographic with all key metrics
+   - Side-by-side 10-year and 5-year comparison
+   - Project count correction visualization at bottom
+
+2. investment_comparison.png (85 KB)
+   - Dimensions: 9.9 x 5.9 inches (2970 x 1771 px)
+   - Horizontal bar chart
+   - IWRC funding by period: $8.5M (10yr), $7.3M (5yr)
+
+3. roi_comparison.png (115 KB)
+   - Dimensions: 9.9 x 5.9 inches (2971 x 1771 px)
+   - Grouped bar chart: Investment vs Follow-on Funding
+   - ROI multipliers: 0.03x (10yr), 0.04x (5yr)
+
+4. students_trained.png (120 KB)
+   - Dimensions: 9.9 x 5.9 inches (2969 x 1779 px)
+   - Grouped bar chart by student type
+   - Total: 304 (10yr), 186 (5yr)
+
+5. student_distribution_pie.png (220 KB)
+   - Dimensions: 13.6 x 5.9 inches (4086 x 1779 px)
+   - Two pie charts side-by-side
+   - Student type percentages with counts
+
+6. projects_by_year.png (195 KB)
+   - Dimensions: 11.9 x 5.9 inches (3570 x 1770 px)
+   - Line chart trend 2015-2024
+   - Unique project counts per year
+   - Peak in 2022: 15 projects
+
+7. institutional_reach.png (77 KB)
+   - Dimensions: 9.9 x 5.9 inches (2970 x 1770 px)
+   - Horizontal bar chart
+   - Institutions served: 16 (10yr), 11 (5yr)
+
+8. award_breakdown.png (182 KB)
+   - Dimensions: 13.0 x 5.9 inches (3913 x 1779 px)
+   - Two pie charts showing grants, awards, achievements distribution
+
+9. top_institutions.png (210 KB)
+   - Dimensions: 11.9 x 7.9 inches (3573 x 2372 px)
+   - Horizontal bar chart
+   - Top 10 institutions by IWRC funding (2015-2024)
+
+10. project_count_correction.png (146 KB)
+    - Dimensions: 11.9 x 6.9 inches (3569 x 2070 px)
+    - Bar chart: old vs corrected counts
+    - 220→77 (65%), 142→47 (67% reduction)
+
+================================================================================
+SUMMARY STATISTICS
+================================================================================
+
+Total Files: 15 PNG files (10 primary + 5 legacy)
+Total Size: 2,642.9 KB (2.58 MB)
+All files: 300 DPI ✓
+Publication-ready: Yes ✓
+
+10-YEAR PERIOD (2015-2024):
+  - Projects: 77 unique (was 220 rows → 65% reduction)
+  - Investment: $8,516,278
+  - Follow-on Funding: $275,195
+  - Students: 304 total
+  - ROI: 0.03x
+  - Institutions: 16
+
+5-YEAR PERIOD (2020-2024):
+  - Projects: 47 unique (was 142 rows → 67% reduction)
+  - Investment: $7,319,144
+  - Follow-on Funding: $261,000
+  - Students: 186 total
+  - ROI: 0.04x
+  - Institutions: 11
+
+================================================================================
+QUALITY ASSURANCE CHECKLIST
+================================================================================
+
+✓ Correct 300 DPI resolution
+✓ Accurate data (verified against regenerate_analysis.py)
+✓ Proper dimensions (print-ready)
+✓ Clear labels and legends
+✓ Professional color scheme
+✓ Consistent styling across charts
+✓ No overlapping text or elements
+✓ High contrast for readability
+✓ Value labels visible and accurate
+
+================================================================================
+REGENERATION INSTRUCTIONS
+================================================================================
+
+cd "/Users/shivpat/Downloads/Seed Fund Tracking"
+python3 scripts/generate_all_static_visualizations.py
+
+Runtime: ~10-15 seconds
+Output: 10 PNG files at 300 DPI
+
+================================================================================
+END OF INVENTORY
+================================================================================

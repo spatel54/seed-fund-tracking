@@ -1,0 +1,147 @@
+═══════════════════════════════════════════════════════════════════════════════
+IWRC SEED FUND ANALYSIS - CORRECTED FILES INDEX
+═══════════════════════════════════════════════════════════════════════════════
+
+Generated: November 22, 2025
+Purpose: Side-by-side comparison of old (row count) vs corrected (unique ID count)
+
+───────────────────────────────────────────────────────────────────────────────
+CORRECTED COUNTS AT A GLANCE
+───────────────────────────────────────────────────────────────────────────────
+
+Period              Old Count    Corrected Count    Change
+─────────────────────────────────────────────────────────
+10-Year (2015-2024)    220              77          -65%
+5-Year (2020-2024)     142              47          -67%
+
+───────────────────────────────────────────────────────────────────────────────
+NOTEBOOKS (Updated with Corrected Counting Logic)
+───────────────────────────────────────────────────────────────────────────────
+
+✓ 01_comprehensive_roi_analysis_CORRECTED.ipynb
+  Location: /notebooks/current/
+  Description: Complete ROI analysis using unique Project IDs instead of row counts
+  Change: Updated cells 9 and 25 to use df['project_id'].nunique() instead of len(df)
+
+───────────────────────────────────────────────────────────────────────────────
+EXECUTIVE SUMMARY VISUALIZATION
+───────────────────────────────────────────────────────────────────────────────
+
+✓ REVIEW_EXECUTIVE_SUMMARY_CORRECTED.png
+  Location: /visualizations/static/
+  Format: High-resolution PNG (300 DPI)
+  Content: 
+    - Executive summary metrics for both time periods
+    - Corrected project counts highlighted
+    - Comparison chart showing old vs new counts
+    - Visual representation of 65% and 67% reductions
+
+───────────────────────────────────────────────────────────────────────────────
+DETAILED ANALYSIS CHARTS (Regenerated with Corrected Counts)
+───────────────────────────────────────────────────────────────────────────────
+
+✓ iwrc_investment_comparison_corrected.png
+  Shows: Total IWRC investment by time period
+  Data: $8.5M (10-year), $7.3M (5-year)
+
+✓ roi_comparison_corrected.png
+  Shows: ROI multiplier (follow-on funding divided by investment)
+  Data: 0.03x (10-year), 0.04x (5-year)
+
+✓ students_trained_corrected.png
+  Shows: Student training by category (PhD, Master's, Undergrad, PostDoc)
+  Data: 304 total (10-year), 186 total (5-year)
+
+✓ project_count_correction.png
+  Shows: Side-by-side comparison of old vs corrected project counts
+  Highlights: Inflation factor and reduction percentage
+
+All located in: /visualizations/static/
+
+───────────────────────────────────────────────────────────────────────────────
+EXCEL ANALYSIS WORKBOOKS
+───────────────────────────────────────────────────────────────────────────────
+
+✓ IWRC_ROI_Analysis_Summary_CORRECTED.xlsx
+  Location: /data/outputs/
+  Sheets:
+    - Executive Summary (corrected metrics)
+    - Investment (breakdown by time period)
+    - Students Trained (by category)
+    - Follow-on Funding 10yr (detailed breakdown)
+    - Follow-on Funding 5yr (detailed breakdown)
+
+✓ project_recount_verification.xlsx
+  Location: /data/outputs/
+  Sheets:
+    - Summary (corrected counts comparison)
+    - 10_Year_Projects (77 unique Project IDs)
+    - 5_Year_Projects (47 unique Project IDs)
+    - Duplicates_Analysis (why counts were inflated)
+    - Year_Distribution (projects per year)
+
+───────────────────────────────────────────────────────────────────────────────
+DOCUMENTATION
+───────────────────────────────────────────────────────────────────────────────
+
+✓ CORRECTION_SUMMARY.md
+  Location: Root directory
+  Content: Detailed explanation of the correction methodology
+
+✓ CORRECTED_FILES_INDEX.txt
+  Location: Root directory (this file)
+  Content: Index of all corrected files
+
+───────────────────────────────────────────────────────────────────────────────
+ORIGINAL FILES (UNCHANGED - PRESERVED FOR REFERENCE)
+───────────────────────────────────────────────────────────────────────────────
+
+For audit trail and comparison purposes, all original files remain intact:
+
+✓ 01_comprehensive_roi_analysis.ipynb (original)
+✓ REVIEW_EXECUTIVE_SUMMARY.png (original)
+✓ IWRC_ROI_Analysis_Summary.xlsx (original)
+✓ All original visualization files
+
+───────────────────────────────────────────────────────────────────────────────
+HOW THE CORRECTION WAS MADE
+───────────────────────────────────────────────────────────────────────────────
+
+Original Code (INCORRECT):
+  num_projects = len(df_filtered)
+  Result: Counted every row in spreadsheet = 220 (10yr), 142 (5yr)
+
+Corrected Code (CORRECT):
+  num_projects = df_filtered['project_id'].nunique()
+  Result: Counted unique Project IDs only = 77 (10yr), 47 (5yr)
+
+Why Duplicates Existed:
+  - Projects reported multiple times for different outputs
+  - Each publication = one row
+  - Each award/achievement = one row
+  - Each reporting period = one row
+  - Average duplication: 2.86x (10yr), 3.02x (5yr)
+
+───────────────────────────────────────────────────────────────────────────────
+KEY INSIGHTS
+───────────────────────────────────────────────────────────────────────────────
+
+1. IWRC funded 77 unique research projects over 10 years (not 220)
+2. IWRC funded 47 unique research projects over last 5 years (not 142)
+3. Investment and student metrics remain accurate (same data source)
+4. ROI calculation updated with corrected project denominator
+5. Spreadsheet structure uses one-row-per-output (not one-row-per-project)
+
+───────────────────────────────────────────────────────────────────────────────
+RECOMMENDED NEXT STEPS
+───────────────────────────────────────────────────────────────────────────────
+
+1. Review REVIEW_EXECUTIVE_SUMMARY_CORRECTED.png
+2. Share corrected numbers with stakeholders
+3. Update all official reporting to use:
+   ✓ 77 projects (10-year) not 220
+   ✓ 47 projects (5-year) not 142
+4. Archive original files for audit trail
+5. Use CORRECTED versions for all future analysis
+
+═══════════════════════════════════════════════════════════════════════════════

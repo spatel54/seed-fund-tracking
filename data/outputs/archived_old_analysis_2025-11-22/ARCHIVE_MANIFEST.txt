@@ -1,0 +1,40 @@
+================================================================================
+ARCHIVE MANIFEST - OLD ANALYSIS FILES
+================================================================================
+Archive Date: 2025-11-22
+Archive Location: /Users/shivpat/Downloads/Seed Fund Tracking/data/outputs/archived_old_analysis_2025-11-22/
+
+REASON FOR ARCHIVAL:
+These files contained analysis data with inflated project counts (based on
+older methodology). They have been archived to preserve historical records
+before regeneration with corrected project counts.
+
+ARCHIVED FILES:
+1. IWRC_ROI_Analysis_Summary.xlsx
+   - Old ROI analysis with original project counts
+   - Archived: 2025-11-22
+
+2. project_recount_verification.xlsx
+   - Project count verification data
+   - Archived: 2025-11-22
+
+REPLACED BY:
+- /data/outputs/IWRC_ROI_Analysis_Summary_CORRECTED.xlsx
+  (Uses corrected project count methodology)
+
+ARCHIVAL NOTES:
+- These files are preserved for historical comparison
+- Do not use for current reporting
+- Reference new corrected files for accurate analysis
+- Original analysis data is safe and unchanged
+
+NEW CORRECTED FILES LOCATION:
+- /data/outputs/IWRC_ROI_Analysis_Summary_CORRECTED.xlsx
+
+NEXT STEPS:
+- Phase 2: Regenerate analysis files with corrected project counts
+- Update visualizations to reflect corrected data
+- Update reports with new findings
+
+Contact or refer to GITHUB_READY.md for latest status.
+================================================================================

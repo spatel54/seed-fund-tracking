@@ -1,0 +1,52 @@
+================================================================================
+ARCHIVE MANIFEST - OLD STATIC VISUALIZATIONS
+================================================================================
+Archive Date: 2025-11-22
+Archive Location: /Users/shivpat/Downloads/Seed Fund Tracking/visualizations/static/archived_old_visualizations_2025-11-22/
+
+REASON FOR ARCHIVAL:
+These visualization files were generated from analysis data with older
+(inflated) project counts. They have been archived to preserve historical
+records before regeneration with corrected project counts.
+
+ARCHIVED FILES:
+1. 2025_illinois_institutions_map.png
+   - Map visualization with old project counts
+   - Archived: 2025-11-22
+
+2. 2025_keyword_pie_chart.png
+   - Keyword distribution with old data
+   - Archived: 2025-11-22
+
+3. REVIEW_EXECUTIVE_SUMMARY.png
+   - Executive summary visual with old data
+   - Archived: 2025-11-22
+
+4. REVIEW_SUMMARY_VISUAL.png
+   - Summary visual with old metrics
+   - Archived: 2025-11-22
+
+5. student_distribution_pie.png
+   - Student distribution with old counts
+   - Archived: 2025-11-22
+
+REPLACED BY:
+- /visualizations/static/REVIEW_EXECUTIVE_SUMMARY_CORRECTED.png
+  (Uses corrected project count data)
+- /visualizations/static/iwrc_investment_comparison.png (new)
+- /visualizations/static/roi_comparison.png (new)
+- /visualizations/static/students_trained.png (new)
+
+ARCHIVAL NOTES:
+- These visualizations are preserved for historical comparison
+- Do not use for current presentations or reports
+- Use the corrected versions for all stakeholder communication
+- Original PNG files are safe and unchanged
+
+NEXT STEPS:
+- Phase 2: Regenerate all visualizations with corrected data
+- Update interactive dashboards with new metrics
+- Create new PDF exports from corrected visualizations
+
+Contact or refer to GITHUB_READY.md for latest status.
+================================================================================

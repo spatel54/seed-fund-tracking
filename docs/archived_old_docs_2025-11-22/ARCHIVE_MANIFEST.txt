@@ -1,0 +1,68 @@
+================================================================================
+ARCHIVE MANIFEST - OLD ANALYSIS DOCUMENTATION
+================================================================================
+Archive Date: 2025-11-22
+Archive Location: /Users/shivpat/Downloads/Seed Fund Tracking/docs/archived_old_docs_2025-11-22/
+
+REASON FOR ARCHIVAL:
+These documentation files describe analysis based on older (inflated) project
+counts. They have been archived to preserve historical records before
+regeneration of analysis documentation with corrected project counts.
+
+ARCHIVED FILES:
+1. ANALYSIS_SUMMARY.md
+   - Summary of analysis findings with old project counts
+   - Archived: 2025-11-22
+
+2. CLAUDE.md
+   - Claude AI assistant notes with old analysis reference
+   - Archived: 2025-11-22
+
+3. NOTEBOOK_REVIEW_REPORT.md
+   - Notebook review with old analysis findings
+   - Archived: 2025-11-22
+
+4. ORGANIZATION_SUMMARY.md
+   - Organization structure documentation with old data
+   - Archived: 2025-11-22
+
+5. QUICK_FIX_GUIDE.md
+   - Quick fix guide for old analysis setup
+   - Archived: 2025-11-22
+
+6. QUICK_START_GUIDE.md
+   - Quick start guide for old analysis
+   - Archived: 2025-11-22
+
+7. REORGANIZATION_SUMMARY.md
+   - Reorganization summary from old analysis phase
+   - Archived: 2025-11-22
+
+8. RESULTS_READY.md
+   - Results documentation with old findings
+   - Archived: 2025-11-22
+
+ACTIVE DOCUMENTATION RETAINED:
+- CLAUDE_UPDATE_SUMMARY.md (current status)
+- EXPORT_PACKAGE_CONTENTS.md (export guide)
+- EXPORT_TO_PDF_GUIDE.md (PDF export instructions)
+- GITHUB_READY.md (GitHub setup status)
+- HTML_ANALYSIS_REPORT.md (HTML report guide)
+- PUSH_INSTRUCTIONS.md (Git push guide)
+- REORGANIZATION_NOVEMBER_2025.md (current reorganization)
+- .SESSION_COMPLETE.md (session status)
+- .github-setup.md (GitHub setup notes)
+
+ARCHIVAL NOTES:
+- These documentation files are preserved for historical reference
+- Do not use for current project documentation
+- Refer to active documentation files for latest status
+- Archive preserves methodology and findings for future comparison
+
+NEXT STEPS:
+- Phase 2: Generate updated analysis documentation with corrected counts
+- Update all reports with new findings
+- Create new summary documentation reflecting corrected data
+
+Contact or refer to GITHUB_READY.md for latest status.
+================================================================================

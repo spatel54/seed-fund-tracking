@@ -1,0 +1,170 @@
+╔═════════════════════════════════════════════════════════════════╗
+║          CORRECTED PROJECT COUNTS - QUICK REFERENCE            ║
+╚═════════════════════════════════════════════════════════════════╝
+
+CORRECTED NUMBERS (Use These Going Forward)
+═════════════════════════════════════════════════════════════════
+
+10-Year (2015-2024):  77 projects   (was 220 rows)  -65%
+5-Year (2020-2024):   47 projects   (was 142 rows)  -67%
+
+
+WHAT TO SHARE WITH STAKEHOLDERS
+═════════════════════════════════════════════════════════════════
+
+Visual:
+  → /visualizations/static/REVIEW_EXECUTIVE_SUMMARY.png
+
+PDF Summary:
+  → /reports/IWRC_Seed_Fund_Executive_Summary.pdf
+
+PDF Fact Sheet:
+  → /reports/IWRC_Fact_Sheet.pdf
+
+Interactive Dashboards:
+  → /visualizations/interactive/roi_analysis_dashboard.html
+  → /visualizations/interactive/institutional_distribution_map.html
+
+
+WHERE EVERYTHING IS LOCATED
+═════════════════════════════════════════════════════════════════
+
+ANALYSIS DATA:
+  /data/outputs/
+    ├─ IWRC_ROI_Analysis_Summary.xlsx
+    ├─ IWRC_Detailed_Project_Analysis.xlsx
+    └─ IWRC_Financial_Summary.xlsx
+
+VISUALIZATIONS (Static):
+  /visualizations/static/
+    ├─ REVIEW_EXECUTIVE_SUMMARY.png ⭐ Main graphic
+    ├─ investment_comparison.png
+    ├─ roi_comparison.png
+    ├─ students_trained.png
+    ├─ student_distribution_pie.png
+    ├─ projects_by_year.png
+    ├─ institutional_reach.png
+    ├─ award_breakdown.png
+    ├─ top_institutions.png
+    └─ project_count_correction.png
+
+VISUALIZATIONS (Interactive):
+  /visualizations/interactive/
+    ├─ roi_analysis_dashboard.html ⭐ Main dashboard
+    ├─ institutional_distribution_map.html
+    ├─ detailed_analysis_dashboard.html
+    ├─ students_interactive.html
+    ├─ investment_interactive.html
+    └─ projects_timeline.html
+
+DOCUMENTATION:
+  /docs/
+    ├─ ANALYSIS_SUMMARY.md
+    ├─ METHODOLOGY.md
+    ├─ DATA_DICTIONARY.md
+    ├─ INSTITUTIONAL_REACH.md
+    ├─ STUDENT_ANALYSIS.md
+    ├─ FINDINGS.md
+    └─ CORRECTION_NOTES.md
+
+REPORTS:
+  /reports/
+    ├─ IWRC_Seed_Fund_Executive_Summary.pdf ⭐
+    ├─ IWRC_Detailed_Analysis_Report.pdf
+    ├─ IWRC_Fact_Sheet.pdf ⭐
+    └─ IWRC_Financial_Summary.pdf
+
+OLD FILES (Archived):
+  /data/outputs/archived_old_analysis_2025-11-22/
+  /visualizations/static/archived_old_visualizations_2025-11-22/
+  /visualizations/interactive/archived_old_interactive_2025-11-22/
+  /docs/archived_old_docs_2025-11-22/
+
+
+KEY METRICS (All Files Use These)
+═════════════════════════════════════════════════════════════════
+
+10-YEAR (2015-2024)
+  Projects:        77 unique
+  Investment:      $8,516,278
+  Follow-on:       $275,195
+  Students:        304 (PhD: 118, MS: 52, UG: 127, PD: 7)
+  ROI:             0.03x
+  Institutions:    16
+
+5-YEAR (2020-2024)
+  Projects:        47 unique
+  Investment:      $7,319,144
+  Follow-on:       $261,000
+  Students:        186 (PhD: 88, MS: 26, UG: 65, PD: 7)
+  ROI:             0.04x
+  Institutions:    11
+
+
+HOW THE CORRECTION WAS MADE
+═════════════════════════════════════════════════════════════════
+
+BEFORE:  len(df)  → counted rows   → 220, 142
+AFTER:   nunique() → counted unique → 77, 47
+
+REASON:  Each project appears multiple times for:
+         • Different publications
+         • Different awards
+         • Different reporting periods
+
+
+FILES TO DELETE/ARCHIVE
+═════════════════════════════════════════════════════════════════
+
+OLD FILES ARE ALREADY ARCHIVED IN:
+  archived_old_*_2025-11-22/ directories
+
+You can safely use the new files:
+  ✓ IWRC_ROI_Analysis_Summary.xlsx
+  ✓ All PNG visualizations (not "_corrected" versions)
+  ✓ All HTML dashboards
+  ✓ All PDF reports
+  ✓ All markdown documentation
+
+
+VERIFICATION CHECKLIST
+═════════════════════════════════════════════════════════════════
+
+When presenting corrected numbers, verify:
+
+☐ 10-year count: 77 projects (not 220)
+☐ 5-year count:  47 projects (not 142)
+☐ Investment figures match: $8.5M and $7.3M
+☐ Student totals match: 304 and 186
+☐ ROI matches: 0.03x and 0.04x
+☐ Institution counts: 16 and 11
+
+If any don't match, check the Excel workbooks to verify.
+
+
+COMMON QUESTIONS
+═════════════════════════════════════════════════════════════════
+
+Q: Why are the project counts lower?
+A: Projects appear multiple times in spreadsheet (one row per
+   publication/award/reporting period). Correct count uses unique
+   Project IDs, not row count.
+
+Q: Are investment numbers affected?
+A: No. Investment ($8.5M/$7.3M) is unaffected - same source data,
+   same calculation method.
+
+Q: Are student numbers affected?
+A: No. Student counts (304/186) are unaffected.
+
+Q: When should I use the old numbers?
+A: Never. Use the corrected numbers (77/47) going forward.
+
+Q: Can I restore the old files?
+A: Yes, they're archived in archived_old_*_2025-11-22/ directories.
+
+
+═════════════════════════════════════════════════════════════════
+Last Updated: November 22, 2025
+Status: All files regenerated and verified
+═════════════════════════════════════════════════════════════════
