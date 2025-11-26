@@ -86,7 +86,7 @@ def load_data():
 
 
 def generate_investment_chart(df_all, df_104b, award_type='all'):
-    """Generate investment comparison chart."""
+    """Generate investment comparison chart with full IWRC branding."""
     df = df_all if award_type == 'all' else df_104b
 
     periods = ['10-Year\n(2015-2024)', '5-Year\n(2020-2024)']
@@ -96,37 +96,49 @@ def generate_investment_chart(df_all, df_104b, award_type='all'):
 
     investments = [df_10yr['award_amount'].sum(), df_5yr['award_amount'].sum()]
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    bars = ax.barh(periods, investments, color=[COLORS['primary'], COLORS['secondary']], height=0.6)
+    fig, ax = plt.subplots(figsize=(12, 7))
+    fig.patch.set_facecolor('white')
+    ax.set_facecolor(COLORS['background'])
+
+    bars = ax.barh(periods, investments, color=[COLORS['primary'], COLORS['secondary']],
+                   height=0.5, edgecolor='white', linewidth=2)
 
     for bar, value in zip(bars, investments):
         ax.text(value + max(investments)*0.02, bar.get_y() + bar.get_height()/2,
-                f'${value/1e6:.1f}M', va='center', fontsize=12, fontweight='bold')
+                f'${value/1e6:.1f}M', va='center', fontsize=13, fontweight='bold',
+                color=COLORS['text'])
 
-    ax.set_xlabel('Total Investment ($)', fontsize=12, fontweight='bold', color=COLORS['text'])
+    ax.set_xlabel('Total Investment ($)', fontsize=13, fontweight='bold', color=COLORS['text'])
     track_label = get_award_type_label(award_type)
-    ax.set_title(f'IWRC Seed Funding Investment\n{track_label}', fontsize=14, fontweight='bold',
+    ax.set_title(f'IWRC Seed Funding Investment\n{track_label}', fontsize=15, fontweight='bold',
                  color=COLORS['dark_teal'], pad=20)
 
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.grid(axis='x', alpha=0.3, color=COLORS['background'])
+    ax.spines['left'].set_color(COLORS['text'])
+    ax.spines['bottom'].set_color(COLORS['text'])
+    ax.grid(axis='x', alpha=0.2, color=COLORS['text'], linestyle='--', linewidth=0.5)
+    ax.set_axisbelow(True)
+
+    # Format x-axis as currency
+    ax.xaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x/1e6:.0f}M'))
 
     apply_iwrc_matplotlib_style(fig, ax)
-    add_logo_to_matplotlib_figure(fig, position='top-right', size=0.08)
+    add_logo_to_matplotlib_figure(fig, position='top-right', size=0.10)
 
     plt.tight_layout()
 
     # Save to both locations
     short_label = get_award_type_short_label(award_type)
     output_path = os.path.join(FINAL_DELIVERABLES, 'visualizations/static', f'investment_comparison_{short_label}.png')
-    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
     print(f"  ✓ Saved: {os.path.basename(output_path)}")
-    plt.close()
+    plt.close(fig)
 
 
 def generate_students_chart(df_all, df_104b, award_type='all'):
-    """Generate students trained chart."""
+    """Generate students trained chart with full IWRC branding."""
     df = df_all if award_type == 'all' else df_104b
 
     periods = ['10-Year\n(2015-2024)', '5-Year\n(2020-2024)']
@@ -139,36 +151,44 @@ def generate_students_chart(df_all, df_104b, award_type='all'):
 
     students = [int(student_10yr), int(student_5yr)]
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    bars = ax.barh(periods, students, color=[COLORS['primary'], COLORS['secondary']], height=0.6)
+    fig, ax = plt.subplots(figsize=(12, 7))
+    fig.patch.set_facecolor('white')
+    ax.set_facecolor(COLORS['background'])
+
+    bars = ax.barh(periods, students, color=[COLORS['primary'], COLORS['secondary']],
+                   height=0.5, edgecolor='white', linewidth=2)
 
     for bar, value in zip(bars, students):
         ax.text(value + max(students)*0.02, bar.get_y() + bar.get_height()/2,
-                f'{value:,}', va='center', fontsize=12, fontweight='bold', color=COLORS['text'])
+                f'{value:,}', va='center', fontsize=13, fontweight='bold', color=COLORS['text'])
 
-    ax.set_xlabel('Number of Students', fontsize=12, fontweight='bold', color=COLORS['text'])
+    ax.set_xlabel('Number of Students', fontsize=13, fontweight='bold', color=COLORS['text'])
     track_label = get_award_type_label(award_type)
     ax.set_title(f'Students Trained Through IWRC Seed Funding\n{track_label}', fontsize=14, fontweight='bold',
                  color=COLORS['dark_teal'], pad=20)
 
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.grid(axis='x', alpha=0.3, color=COLORS['background'])
+    ax.spines['left'].set_color(COLORS['text'])
+    ax.spines['bottom'].set_color(COLORS['text'])
+    ax.grid(axis='x', alpha=0.2, color=COLORS['text'], linestyle='--', linewidth=0.5)
+    ax.set_axisbelow(True)
 
     apply_iwrc_matplotlib_style(fig, ax)
-    add_logo_to_matplotlib_figure(fig, position='top-right', size=0.08)
+    add_logo_to_matplotlib_figure(fig, position='top-right', size=0.10)
 
     plt.tight_layout()
 
     short_label = get_award_type_short_label(award_type)
     output_path = os.path.join(FINAL_DELIVERABLES, 'visualizations/static', f'students_trained_{short_label}.png')
-    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
     print(f"  ✓ Saved: {os.path.basename(output_path)}")
-    plt.close()
+    plt.close(fig)
 
 
 def generate_roi_chart(df_all, df_104b, award_type='all'):
-    """Generate ROI comparison chart."""
+    """Generate ROI comparison chart with full IWRC branding."""
     df = df_all if award_type == 'all' else df_104b
 
     periods = ['10-Year\n(2015-2024)', '5-Year\n(2020-2024)']
@@ -184,41 +204,54 @@ def generate_roi_chart(df_all, df_104b, award_type='all'):
     followon_5yr = investment_5yr * 0.04
 
     fig, ax = plt.subplots(figsize=(12, 7))
+    fig.patch.set_facecolor('white')
+    ax.set_facecolor(COLORS['background'])
+
     x = np.arange(len(periods))
     width = 0.35
 
     bars1 = ax.bar(x - width/2, [investment_10yr, investment_5yr], width,
-                   label='IWRC Investment', color=COLORS['primary'])
+                   label='IWRC Investment', color=COLORS['primary'], edgecolor='white', linewidth=1.5)
     bars2 = ax.bar(x + width/2, [followon_10yr, followon_5yr], width,
-                   label='Follow-on Funding', color=COLORS['secondary'])
+                   label='Follow-on Funding', color=COLORS['secondary'], edgecolor='white', linewidth=1.5)
 
     for bars in [bars1, bars2]:
         for bar in bars:
             height = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2., height,
-                    f'${height/1e6:.2f}M', ha='center', va='bottom', fontsize=10, fontweight='bold')
+                    f'${height/1e6:.2f}M', ha='center', va='bottom', fontsize=11, fontweight='bold',
+                    color=COLORS['text'])
 
-    ax.set_ylabel('Funding Amount ($)', fontsize=12, fontweight='bold', color=COLORS['text'])
+    ax.set_ylabel('Funding Amount ($)', fontsize=13, fontweight='bold', color=COLORS['text'])
     track_label = get_award_type_label(award_type)
-    ax.set_title(f'IWRC Seed Funding & ROI Analysis\n{track_label}', fontsize=14, fontweight='bold',
+    ax.set_title(f'IWRC Seed Funding & ROI Analysis\n{track_label}', fontsize=15, fontweight='bold',
                  color=COLORS['dark_teal'], pad=20)
     ax.set_xticks(x)
     ax.set_xticklabels(periods)
-    ax.legend(fontsize=11, loc='upper left', framealpha=0.95)
+    ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, p: f'${x/1e6:.0f}M'))
+
+    legend = ax.legend(fontsize=12, loc='upper left', framealpha=0.95, edgecolor=COLORS['text'])
+    legend.get_frame().set_facecolor(COLORS['neutral_light'])
+    legend.get_frame().set_linewidth(1)
+
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
-    ax.grid(axis='y', alpha=0.3, color=COLORS['background'])
+    ax.spines['left'].set_color(COLORS['text'])
+    ax.spines['bottom'].set_color(COLORS['text'])
+    ax.grid(axis='y', alpha=0.2, color=COLORS['text'], linestyle='--', linewidth=0.5)
+    ax.set_axisbelow(True)
 
     apply_iwrc_matplotlib_style(fig, ax)
-    add_logo_to_matplotlib_figure(fig, position='top-right', size=0.08)
+    add_logo_to_matplotlib_figure(fig, position='top-right', size=0.10)
 
     plt.tight_layout()
 
     short_label = get_award_type_short_label(award_type)
     output_path = os.path.join(FINAL_DELIVERABLES, 'visualizations/static', f'roi_analysis_{short_label}.png')
-    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white')
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    plt.savefig(output_path, dpi=300, bbox_inches='tight', facecolor='white', edgecolor='none')
     print(f"  ✓ Saved: {os.path.basename(output_path)}")
-    plt.close()
+    plt.close(fig)
 
 
 def main():
