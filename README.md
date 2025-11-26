@@ -2,6 +2,24 @@
 
 Data analysis project for Illinois Water Resources Center (IWRC) tracking research funding, student outcomes, and project impact across fiscal years 2016-2024.
 
+## 🎉 November 2025 Update: IWRC Rebranding & Dual-Track Analysis Complete!
+
+This project has been **completely rebranded with IWRC colors and fonts**, and now includes **dual-track analysis** comparing "All Projects" with "104B Only (Seed Funding)" tracks.
+
+### What's New
+- ✓ **IWRC Branded Visualizations** - All charts use IWRC colors (#258372 teal, #639757 olive)
+- ✓ **Montserrat Fonts** - Professional typography throughout
+- ✓ **Dual-Track Analysis** - Compare comprehensive portfolio vs seed funding focus
+- ✓ **FINAL_DELIVERABLES** - Organized output folder with static/interactive/PDF formats
+- ✓ **6 Static Charts** - Brand-new generated with proper metrics verification
+- ✓ **Comprehensive Documentation** - New guides for rebranding, award types, and deliverables
+
+### Quick Links
+- 📖 [Rebranding Summary](docs/REBRANDING_SUMMARY.md) - Overview of changes
+- 📚 [Award Type Analysis Guide](docs/AWARD_TYPE_ANALYSIS_GUIDE.md) - Understanding the dual tracks
+- 📁 [Final Deliverables Guide](docs/FINAL_DELIVERABLES_GUIDE.md) - File structure and contents
+- 📊 [FINAL_DELIVERABLES/](FINAL_DELIVERABLES/) - Generated outputs
+
 ## Project Structure
 
 ```
