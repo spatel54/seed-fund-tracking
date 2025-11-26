@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IWRC Seed Fund Interactive Visualizations - Dashboard Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1f77b4 0%, #17a2b8 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro p {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .viz-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .viz-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            border: 2px solid #f0f0f0;
+        }
+
+        .viz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-color: #1f77b4;
+        }
+
+        .viz-card-header {
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 3px solid #1f77b4;
+        }
+
+        .viz-card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .viz-card h3 {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .viz-card p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .viz-card-body {
+            padding: 25px;
+        }
+
+        .viz-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .viz-features li {
+            padding: 8px 0;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .viz-features li:before {
+            content: "✓ ";
+            color: #2ca02c;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #1f77b4 0%, #17a2b8 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(31, 119, 180, 0.4);
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .compatibility {
+            margin-top: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #17a2b8;
+        }
+
+        .compatibility h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .compatibility ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .compatibility li {
+            background: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .viz-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>IWRC Seed Fund Interactive Visualizations</h1>
+            <p class="subtitle">Comprehensive Analysis Dashboard Hub</p>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value">77</span>
+                    <span class="stat-label">Unique Projects<br>(2015-2024)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">$8.5M</span>
+                    <span class="stat-label">Total Investment<br>(10 Years)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">304</span>
+                    <span class="stat-label">Students Supported<br>(2015-2024)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">3%</span>
+                    <span class="stat-label">Overall ROI<br>(10-Year Period)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <p>
+                    Explore comprehensive interactive visualizations of the Illinois Water Resources Center (IWRC)
+                    Seed Fund program data. Each dashboard provides unique insights into investment patterns,
+                    student support, geographic distribution, and return on investment metrics.
+                </p>
+            </div>
+
+            <div class="viz-grid">
+                <!-- ROI Analysis Dashboard -->
+                <div class="viz-card">
+                    <div class="viz-card-header">
+                        <div class="viz-card-icon">📊</div>
+                        <h3>ROI Analysis Dashboard</h3>
+                        <p>Comprehensive overview of program performance</p>
+                    </div>
+                    <div class="viz-card-body">
+                        <ul class="viz-features">
+                            <li>Investment trends over 10 years</li>
+                            <li>Project count by year</li>
+                            <li>Student support metrics</li>
+                            <li>ROI trend analysis</li>
+                            <li>Top 10 institutions by investment</li>
+                            <li>Interactive hover tooltips</li>
+                        </ul>
+                        <a href="roi_analysis_dashboard.html" class="btn">View Dashboard</a>
+                    </div>
+                </div>
+
+                <!-- Geographic Map -->
+                <div class="viz-card">
+                    <div class="viz-card-header">
+                        <div class="viz-card-icon">🗺️</div>
+                        <h3>Geographic Distribution Map</h3>
+                        <p>Interactive map of Illinois institutions</p>
+                    </div>
+                    <div class="viz-card-body">
+                        <ul class="viz-features">
+                            <li>Folium-powered interactive map</li>
+                            <li>Marker size = funding amount</li>
+                            <li>Color-coded by project count</li>
+                            <li>Detailed institution popups</li>
+                            <li>Optional heatmap layer</li>
+                            <li>Zoom and pan controls</li>
+                        </ul>
+                        <a href="institutional_distribution_map.html" class="btn">View Map</a>
+                    </div>
+                </div>
+
+                <!-- Detailed Analysis -->
+                <div class="viz-card">
+                    <div class="viz-card-header">
+                        <div class="viz-card-icon">📈</div>
+                        <h3>Detailed Analysis</h3>
+                        <p>Multi-panel comprehensive breakdown</p>
+                    </div>
+                    <div class="viz-card-body">
+                        <ul class="viz-features">
+                            <li>Funding breakdown by category</li>
+                            <li>Cumulative student trends</li>
+                            <li>ROI projections through 2027</li>
+                            <li>Key performance indicators</li>
+                            <li>Stacked bar charts</li>
+                            <li>Interactive legends</li>
+                        </ul>
+                        <a href="detailed_analysis.html" class="btn">View Analysis</a>
+                    </div>
+                </div>
+
+                <!-- Student Analysis -->
+                <div class="viz-card">
+                    <div class="viz-card-header">
+                        <div class="viz-card-icon">🎓</div>
+                        <h3>Student Analysis</h3>
+                        <p>Hierarchical student distribution sunburst</p>
+                    </div>
+                    <div class="viz-card-body">
+                        <ul class="viz-features">
+                            <li>Sunburst chart visualization</li>
+                            <li>Student type breakdown</li>
+                            <li>Institution distribution</li>
+                            <li>Interactive drill-down</li>
+                            <li>Percentage calculations</li>
+                            <li>Graduate, undergrad, postdoc splits</li>
+                        </ul>
+                        <a href="students_interactive.html" class="btn">View Students</a>
+                    </div>
+                </div>
+
+                <!-- Investment Analysis -->
+                <div class="viz-card">
+                    <div class="viz-card-header">
+                        <div class="viz-card-icon">💰</div>
+                        <h3>Investment Analysis</h3>
+                        <p>Treemap of funding distribution</p>
+                    </div>
+                    <div class="viz-card-body">
+                        <ul class="viz-features">
+                            <li>Interactive treemap</li>
+                            <li>Investment by institution</li>
+                            <li>Category breakdown</li>
+                            <li>Click-to-zoom functionality</li>
+                            <li>Color-coded amounts</li>
+                            <li>Percentage of total calculations</li>
+                        </ul>
+                        <a href="investment_interactive.html" class="btn">View Investment</a>
+                    </div>
+                </div>
+
+                <!-- Projects Timeline -->
+                <div class="viz-card">
+                    <div class="viz-card-header">
+                        <div class="viz-card-icon">📅</div>
+                        <h3>Projects Timeline</h3>
+                        <p>Chronological project visualization</p>
+                    </div>
+                    <div class="viz-card-body">
+                        <ul class="viz-features">
+                            <li>Timeline chart by year</li>
+                            <li>Grouped by institution</li>
+                            <li>Color-coded funding levels</li>
+                            <li>Project details on hover</li>
+                            <li>Searchable interface</li>
+                            <li>All 77 projects displayed</li>
+                        </ul>
+                        <a href="projects_timeline.html" class="btn">View Timeline</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compatibility Info -->
+            <div class="compatibility">
+                <h3>Browser Compatibility & Features</h3>
+                <p style="margin-bottom: 15px;">All visualizations are compatible with modern browsers and include:</p>
+                <ul>
+                    <li>Chrome 90+</li>
+                    <li>Firefox 88+</li>
+                    <li>Safari 14+</li>
+                    <li>Edge 90+</li>
+                    <li>Mobile responsive</li>
+                    <li>Download as PNG</li>
+                    <li>Zoom controls</li>
+                    <li>Pan & filter</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Illinois Water Resources Center (IWRC)</strong></p>
+            <p>Seed Fund Tracking & Analysis System</p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                Generated: November 22, 2025 | Data Period: 2015-2024 | Corrected Project Counts
+            </p>
+        </div>
+    </div>
+</body>
+</html>
