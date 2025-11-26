@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generate all static visualizations for IWRC Seed Fund Analysis
-High-quality PNG outputs at 300 DPI with corrected project counts
+High-quality PNG outputs at 300 DPI with IWRC branding and award type breakdown
 """
 
 import matplotlib.pyplot as plt
@@ -9,27 +9,41 @@ import matplotlib.patches as mpatches
 import seaborn as sns
 import numpy as np
 from pathlib import Path
+import sys
+import os
 
-# Set style
-plt.style.use('seaborn-v0_8-darkgrid')
-sns.set_palette("husl")
+# Add scripts directory to path
+sys.path.insert(0, '/Users/shivpat/Downloads/Seed Fund Tracking/scripts')
+
+# Import IWRC branding
+try:
+    from iwrc_brand_style import IWRC_COLORS, configure_matplotlib_iwrc, apply_iwrc_matplotlib_style, add_logo_to_matplotlib_figure
+    USE_IWRC_BRANDING = True
+except ImportError:
+    USE_IWRC_BRANDING = False
+    print("Warning: IWRC branding modules not available")
+
+# Configure matplotlib with IWRC branding
+if USE_IWRC_BRANDING:
+    configure_matplotlib_iwrc()
+    COLORS = IWRC_COLORS
+else:
+    plt.style.use('seaborn-v0_8-darkgrid')
+    sns.set_palette("husl")
+    # Fallback color palette
+    COLORS = {
+        'primary': '#258372',        # IWRC Teal
+        'secondary': '#639757',      # IWRC Olive
+        'success': '#8ab38a',        # IWRC Sage
+        'accent': '#FCC080',         # IWRC Peach
+        'purple': '#9467bd',
+        'brown': '#8c564b',
+        'pink': '#e377c2'
+    }
 
 # Output directory
-OUTPUT_DIR = Path("/Users/shivpat/Downloads/Seed Fund Tracking/visualizations/static")
+OUTPUT_DIR = Path("/Users/shivpat/Downloads/Seed Fund Tracking/FINAL_DELIVERABLES/visualizations/static")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-# Professional color palette
-COLORS = {
-    'blue': '#2E86AB',
-    'orange': '#F77F00',
-    'green': '#06A77D',
-    'red': '#D62828',
-    'purple': '#7209B7',
-    'yellow': '#FFB703',
-    'dark_blue': '#023047',
-    'light_blue': '#8ECAE6',
-    'teal': '#219EBC',
-}
 
 # Data: Corrected project counts
 DATA = {

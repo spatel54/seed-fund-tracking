@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 Generate Interactive HTML Visualizations for IWRC Seed Fund Tracking
+Dual-track analysis: All Projects vs 104B Only (Seed Funding)
 Uses corrected project counts: 77 projects (2015-2024), 47 projects (2020-2024)
+Applies IWRC branding: #258372 teal, #639757 olive, Montserrat fonts
 """
 
 import pandas as pd
@@ -13,27 +15,32 @@ from folium.plugins import HeatMap, MarkerCluster
 import json
 from datetime import datetime
 import os
+import sys
+import re
 
-# Data Constants (Corrected)
-CORRECTED_DATA = {
-    '10_year': {
-        'period': '2015-2024',
-        'projects': 77,
-        'investment': 8500000,
-        'students': 304,
-        'roi': 0.03
-    },
-    '5_year': {
-        'period': '2020-2024',
-        'projects': 47,
-        'investment': 7300000,
-        'students': 186,
-        'roi': 0.04
+# Add scripts to path for imports
+sys.path.insert(0, '/Users/shivpat/Downloads/Seed Fund Tracking/scripts')
+
+# Import IWRC branding and award type filters
+try:
+    from iwrc_brand_style import IWRC_COLORS, get_iwrc_plotly_template, apply_iwrc_plotly_style
+    from award_type_filters import filter_all_projects, filter_104b_only, get_award_type_label, get_award_type_short_label
+    USE_IWRC_BRANDING = True
+    print("✓ Imported IWRC branding and award type filters")
+except ImportError as e:
+    print(f"Warning: Could not import IWRC modules ({e}). Using fallback colors.")
+    USE_IWRC_BRANDING = False
+    IWRC_COLORS = {
+        'primary': '#1f77b4',
+        'secondary': '#ff7f0e',
+        'success': '#2ca02c',
+        'danger': '#d62728',
+        'warning': '#ff9900',
+        'info': '#17a2b8',
     }
-}
 
-# Color scheme
-COLORS = {
+# Color scheme - IWRC or fallback
+COLORS = IWRC_COLORS if USE_IWRC_BRANDING else {
     'primary': '#1f77b4',
     'secondary': '#ff7f0e',
     'success': '#2ca02c',
@@ -44,13 +51,48 @@ COLORS = {
     'dark': '#343a40'
 }
 
+# Data Constants (Corrected)
+CORRECTED_DATA = {
+    'all': {
+        '10_year': {
+            'period': '2015-2024',
+            'projects': 77,
+            'investment': 8500000,
+            'students': 304,
+            'roi': 0.03
+        },
+        '5_year': {
+            'period': '2020-2024',
+            'projects': 47,
+            'investment': 7300000,
+            'students': 186,
+            'roi': 0.04
+        }
+    },
+    '104b': {
+        '10_year': {
+            'period': '2015-2024',
+            'projects': 60,
+            'investment': 1700000,
+            'students': 202,
+            'roi': 0.03
+        },
+        '5_year': {
+            'period': '2020-2024',
+            'projects': 33,
+            'investment': 1075000,
+            'students': 100,
+            'roi': 0.04
+        }
+    }
+}
+
 def load_data():
-    """Load and process the Excel data"""
+    """Load and process the Excel data with proper column normalization"""
     excel_path = '/Users/shivpat/Downloads/Seed Fund Tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx'
 
     # Read all sheets
     xl_file = pd.ExcelFile(excel_path)
-    print(f"  Available sheets: {xl_file.sheet_names}")
 
     # Load main data - try different sheet names
     try:
@@ -61,6 +103,25 @@ def load_data():
         except:
             # Use first sheet
             df = pd.read_excel(excel_path, sheet_name=0)
+
+    # Normalize column names for award type filtering
+    col_map = {
+        'Project ID ': 'project_id',
+        'Award Type': 'award_type',
+        'Project Title': 'project_title',
+        'Project PI': 'pi_name',
+        'Academic Institution of PI': 'institution',
+        'Award Amount Allocated ($) this must be filled in for all lines': 'award_amount',
+        'Number of PhD Students Supported by WRRA $': 'phd_students',
+        'Number of MS Students Supported by WRRA $': 'ms_students',
+        'Number of Undergraduate Students Supported by WRRA $': 'undergrad_students',
+        'Number of Post Docs Supported by WRRA $': 'postdoc_students',
+    }
+
+    # Rename columns if they exist in the dataframe
+    available_cols = {k: v for k, v in col_map.items() if k in df.columns}
+    if available_cols:
+        df = df.rename(columns=available_cols)
 
     # Load institution coordinates if available
     try:
@@ -84,7 +145,6 @@ def load_data():
             'Longitude': [-88.2272, -87.6753, -87.6266, -87.5987, -89.2167, -88.7712, -88.9907, -90.6706, -88.2039, -87.7195]
         })
 
-    print(f"  Data columns: {list(df.columns)}")
     return df, coords_df
 
 def create_roi_dashboard(df, output_path):
@@ -245,13 +305,16 @@ def create_roi_dashboard(df, output_path):
         row=3, col=2
     )
 
-    # Update layout
+    # Update layout with IWRC styling
+    if USE_IWRC_BRANDING:
+        fig = apply_iwrc_plotly_style(fig)
+
     fig.update_layout(
         title={
             'text': 'IWRC Seed Fund ROI Analysis Dashboard<br><sub>2015-2024 | 77 Projects | $8.5M Investment | 304 Students | 3% ROI</sub>',
             'x': 0.5,
             'xanchor': 'center',
-            'font': {'size': 24}
+            'font': {'size': 24, 'family': 'Montserrat, sans-serif', 'color': COLORS['dark_teal'] if USE_IWRC_BRANDING else '#000000'}
         },
         showlegend=False,
         height=1400,
@@ -681,86 +744,191 @@ def create_projects_timeline(df, output_path):
 
 def main():
     """Main execution function"""
-    print("=" * 80)
-    print("IWRC Seed Fund Interactive Visualizations Generator")
-    print("=" * 80)
-    print(f"\nCorrected Data:")
-    print(f"  10-Year (2015-2024): 77 projects, $8.5M, 304 students, 3% ROI")
-    print(f"  5-Year (2020-2024): 47 projects, $7.3M, 186 students, 4% ROI")
+    print("\n" + "█" * 80)
+    print("█" + " IWRC SEED FUND INTERACTIVE VISUALIZATIONS GENERATOR".center(78) + "█")
+    print("█" + " Dual-Track Analysis (All Projects & 104B Only)".center(78) + "█")
+    print("█" * 80)
+
+    print(f"\n{'All Projects (104B + 104G + Coordination):':50}")
+    print(f"  10-Year (2015-2024): 77 projects, $8.5M, 304 students")
+    print(f"  5-Year (2020-2024): 47 projects, $7.3M, 186 students")
+
+    print(f"\n{'104B Only (Seed Funding):':50}")
+    print(f"  10-Year (2015-2024): 60 projects, $1.7M, 202 students")
+    print(f"  5-Year (2020-2024): 33 projects, $1.1M, 100 students")
     print("\n" + "=" * 80 + "\n")
 
     # Load data
     print("Loading data...")
-    df, coords_df = load_data()
-    print(f"  Loaded {len(df)} rows from Excel")
+    try:
+        df, coords_df = load_data()
+        print(f"  ✓ Loaded {len(df)} rows from Excel")
 
-    # Output directory
-    output_dir = '/Users/shivpat/Downloads/Seed Fund Tracking/visualizations/interactive'
-    os.makedirs(output_dir, exist_ok=True)
+        # Filter for both award types
+        df_all = filter_all_projects(df)
+        df_104b = filter_104b_only(df)
+        print(f"  ✓ All Projects filter: {len(df_all)} rows")
+        print(f"  ✓ 104B Only filter: {len(df_104b)} rows")
+    except Exception as e:
+        print(f"  ✗ Error loading data: {e}")
+        df = None
+        coords_df = None
+        df_all = None
+        df_104b = None
 
-    # Create visualizations
+    # Output directories - create dual track structure
+    base_output_dir = '/Users/shivpat/Downloads/Seed Fund Tracking/FINAL_DELIVERABLES/visualizations/interactive'
+    output_dirs = {
+        'all': os.path.join(base_output_dir, 'all_projects'),
+        '104b': os.path.join(base_output_dir, '104b_only'),
+        'comparison': os.path.join(base_output_dir, 'award_type_comparison')
+    }
+
+    for dir_path in output_dirs.values():
+        os.makedirs(dir_path, exist_ok=True)
+
+    print(f"\n✓ Output directories created:")
+    for label, path in output_dirs.items():
+        print(f"  - {label}: {os.path.basename(path)}")
+
+    # Create visualizations for both award types
     file_sizes = {}
 
-    # 1. ROI Dashboard
-    file_sizes['roi_analysis_dashboard.html'] = create_roi_dashboard(
-        df,
-        f'{output_dir}/roi_analysis_dashboard.html'
-    )
+    if df is not None and df_all is not None and df_104b is not None:
+        # Generate for all projects
+        print("\n" + "=" * 80)
+        print("GENERATING VISUALIZATIONS: All Projects (104B + 104G + Coordination)")
+        print("=" * 80 + "\n")
 
-    # 2. Geographic Map
-    file_sizes['institutional_distribution_map.html'] = create_geographic_map(
-        df,
-        coords_df,
-        f'{output_dir}/institutional_distribution_map.html'
-    )
+        # 1. ROI Dashboard
+        file_sizes['roi_analysis_dashboard_all.html'] = create_roi_dashboard(
+            df_all,
+            os.path.join(output_dirs['all'], 'roi_analysis_dashboard.html')
+        )
 
-    # 3. Detailed Analysis
-    file_sizes['detailed_analysis.html'] = create_detailed_analysis(
-        df,
-        f'{output_dir}/detailed_analysis.html'
-    )
+        # 2. Geographic Map
+        file_sizes['institutional_distribution_map_all.html'] = create_geographic_map(
+            df_all,
+            coords_df,
+            os.path.join(output_dirs['all'], 'institutional_distribution_map.html')
+        )
 
-    # 4. Student Analysis
-    file_sizes['students_interactive.html'] = create_student_analysis(
-        df,
-        f'{output_dir}/students_interactive.html'
-    )
+        # 3. Detailed Analysis
+        file_sizes['detailed_analysis_all.html'] = create_detailed_analysis(
+            df_all,
+            os.path.join(output_dirs['all'], 'detailed_analysis.html')
+        )
 
-    # 5. Investment Analysis
-    file_sizes['investment_interactive.html'] = create_investment_analysis(
-        df,
-        f'{output_dir}/investment_interactive.html'
-    )
+        # 4. Student Analysis
+        file_sizes['students_interactive_all.html'] = create_student_analysis(
+            df_all,
+            os.path.join(output_dirs['all'], 'students_interactive.html')
+        )
 
-    # 6. Projects Timeline
-    file_sizes['projects_timeline.html'] = create_projects_timeline(
-        df,
-        f'{output_dir}/projects_timeline.html'
-    )
+        # 5. Investment Analysis
+        file_sizes['investment_interactive_all.html'] = create_investment_analysis(
+            df_all,
+            os.path.join(output_dirs['all'], 'investment_interactive.html')
+        )
+
+        # 6. Projects Timeline
+        file_sizes['projects_timeline_all.html'] = create_projects_timeline(
+            df_all,
+            os.path.join(output_dirs['all'], 'projects_timeline.html')
+        )
+
+        # Generate for 104B only
+        print("\n" + "=" * 80)
+        print("GENERATING VISUALIZATIONS: 104B Only (Base Grant - Seed Funding)")
+        print("=" * 80 + "\n")
+
+        # 1. ROI Dashboard
+        file_sizes['roi_analysis_dashboard_104b.html'] = create_roi_dashboard(
+            df_104b,
+            os.path.join(output_dirs['104b'], 'roi_analysis_dashboard.html')
+        )
+
+        # 2. Geographic Map
+        file_sizes['institutional_distribution_map_104b.html'] = create_geographic_map(
+            df_104b,
+            coords_df,
+            os.path.join(output_dirs['104b'], 'institutional_distribution_map.html')
+        )
+
+        # 3. Detailed Analysis
+        file_sizes['detailed_analysis_104b.html'] = create_detailed_analysis(
+            df_104b,
+            os.path.join(output_dirs['104b'], 'detailed_analysis.html')
+        )
+
+        # 4. Student Analysis
+        file_sizes['students_interactive_104b.html'] = create_student_analysis(
+            df_104b,
+            os.path.join(output_dirs['104b'], 'students_interactive.html')
+        )
+
+        # 5. Investment Analysis
+        file_sizes['investment_interactive_104b.html'] = create_investment_analysis(
+            df_104b,
+            os.path.join(output_dirs['104b'], 'investment_interactive.html')
+        )
+
+        # 6. Projects Timeline
+        file_sizes['projects_timeline_104b.html'] = create_projects_timeline(
+            df_104b,
+            os.path.join(output_dirs['104b'], 'projects_timeline.html')
+        )
+    else:
+        print("\n✗ Could not load data. Skipping visualization generation.")
 
     # Summary
-    print("\n" + "=" * 80)
-    print("GENERATION COMPLETE")
-    print("=" * 80)
-    print(f"\nCreated {len(file_sizes)} interactive visualizations:")
-    print(f"\nOutput Directory: {output_dir}\n")
+    print("\n" + "█" * 80)
+    print("█" + " GENERATION COMPLETE".center(78) + "█")
+    print("█" * 80)
 
-    total_size = 0
-    for filename, size in file_sizes.items():
-        size_mb = size / (1024 * 1024)
-        total_size += size
-        print(f"  {filename:45s} {size_mb:8.2f} MB")
+    if file_sizes:
+        print(f"\n✓ Created {len(file_sizes)} interactive visualizations (dual-track):\n")
 
-    print(f"\n  {'TOTAL':45s} {total_size/(1024*1024):8.2f} MB")
-    print("\n" + "=" * 80)
-    print("\nInteractive Features:")
-    print("  - Hover tooltips with detailed information")
-    print("  - Click-to-filter and zoom capabilities")
-    print("  - Download charts as PNG")
-    print("  - Responsive design for all screen sizes")
-    print("  - Professional color scheme")
-    print("  - Cross-browser compatible (Chrome, Firefox, Safari, Edge)")
-    print("\n" + "=" * 80)
+        total_size = 0
+        for category in ['All Projects', '104B Only']:
+            size_sum = 0
+            count = 0
+            prefix = 'all' if category == 'All Projects' else '104b'
+            print(f"\n{category}:")
+            for filename, size in file_sizes.items():
+                if prefix in filename:
+                    size_mb = size / (1024 * 1024)
+                    size_sum += size
+                    total_size += size
+                    count += 1
+                    short_name = filename.replace(f'_{prefix}', '').replace('.html', '')
+                    print(f"  ✓ {short_name:40s} {size_mb:8.2f} MB")
+
+            if count > 0:
+                print(f"    Subtotal: {count} files, {size_sum/(1024*1024):.2f} MB")
+
+        print(f"\n{'='*80}")
+        print(f"TOTAL: {len(file_sizes)} files, {total_size/(1024*1024):.2f} MB")
+        print(f"{'='*80}")
+
+        print(f"\nOutput Directories:")
+        print(f"  • All Projects: {output_dirs['all']}")
+        print(f"  • 104B Only: {output_dirs['104b']}")
+        print(f"  • Comparison: {output_dirs['comparison']}")
+
+        print(f"\nInteractive Features:")
+        print(f"  ✓ Hover tooltips with detailed information")
+        print(f"  ✓ Click-to-filter and zoom capabilities")
+        print(f"  ✓ Download charts as PNG")
+        print(f"  ✓ Responsive design for all screen sizes")
+        if USE_IWRC_BRANDING:
+            print(f"  ✓ IWRC branding (#258372 teal, #639757 olive)")
+            print(f"  ✓ Montserrat fonts")
+        print(f"  ✓ Cross-browser compatible (Chrome, Firefox, Safari, Edge)")
+    else:
+        print("\n✗ No visualizations were created due to data loading errors.")
+
+    print(f"\n{'█' * 80}\n")
 
     return file_sizes
 

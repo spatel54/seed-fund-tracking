@@ -86,7 +86,7 @@ def configure_matplotlib_iwrc():
 
     # Grid and spine styling
     plt.rcParams['axes.grid'] = True
-    plt.rcParams['axes.grid.alpha'] = 0.3
+    plt.rcParams['grid.alpha'] = 0.3
     plt.rcParams['grid.color'] = IWRC_COLORS['background']
 
     # Figure background

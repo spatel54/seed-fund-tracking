@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 """
-Regenerate ROI analysis with CORRECTED project counts.
-This script runs the same analysis as the notebook but with the fix:
+Regenerate ROI analysis with CORRECTED project counts and IWRC branding.
+This script runs the same analysis as the notebook but with enhancements:
 - Uses df['project_id'].nunique() instead of len(df) for project counts
+- Supports dual-track analysis: "All Projects" vs "104B Only" (seed funding)
+- Applies IWRC brand colors, fonts, and styling
+- Generates outputs for both award type tracks
 """
 
 import pandas as pd
@@ -11,7 +14,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import re
 import warnings
+import sys
+import os
 warnings.filterwarnings('ignore')
+
+# Add scripts directory to path for imports
+sys.path.insert(0, '/Users/shivpat/Downloads/Seed Fund Tracking/scripts')
+
+# Import IWRC branding modules
+try:
+    from iwrc_brand_style import IWRC_COLORS, configure_matplotlib_iwrc, apply_iwrc_matplotlib_style, add_logo_to_matplotlib_figure
+    from award_type_filters import filter_all_projects, filter_104b_only, get_award_type_label, get_award_type_short_label
+    USE_IWRC_BRANDING = True
+except ImportError as e:
+    print(f"Warning: Could not import IWRC modules ({e}). Using fallback colors.")
+    USE_IWRC_BRANDING = False
 
 # Configure visualization settings for professional output
 sns.set_style('whitegrid')
@@ -24,25 +41,34 @@ plt.rcParams['xtick.labelsize'] = 10
 plt.rcParams['ytick.labelsize'] = 10
 plt.rcParams['legend.fontsize'] = 10
 
-# Professional color palette
-COLORS = {
-    'primary': '#1f77b4',
-    'secondary': '#ff7f0e',
-    'success': '#2ca02c',
-    'accent': '#d62728',
-    'purple': '#9467bd',
-    'brown': '#8c564b',
-    'pink': '#e377c2'
-}
+if USE_IWRC_BRANDING:
+    configure_matplotlib_iwrc()
+    COLORS = IWRC_COLORS
+else:
+    # Fallback color palette
+    COLORS = {
+        'primary': '#258372',        # IWRC Teal
+        'secondary': '#639757',      # IWRC Olive
+        'success': '#8ab38a',        # IWRC Sage
+        'accent': '#FCC080',         # IWRC Peach
+        'purple': '#9467bd',
+        'brown': '#8c564b',
+        'pink': '#e377c2'
+    }
 
 print("=" * 80)
 print("IWRC SEED FUND ANALYSIS - REGENERATION WITH CORRECTED PROJECT COUNTS")
+print("DUAL-TRACK ANALYSIS: All Projects vs 104B Only")
 print("=" * 80)
 
 # Load data
 file_path = '/Users/shivpat/Downloads/Seed Fund Tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx'
 df = pd.read_excel(file_path, sheet_name='Project Overview')
 print(f'\n✓ Data loaded: {len(df):,} rows, {len(df.columns)} columns')
+
+# Award type filtering
+AWARD_TYPES = ['all', '104b']
+print(f'✓ Will generate analysis for: {", ".join([get_award_type_label(at) if USE_IWRC_BRANDING else at for at in AWARD_TYPES])}')
 
 # Column mapping
 col_map = {
