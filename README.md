@@ -1,206 +1,201 @@
-# IWRC Seed Fund Tracking Analysis
+# IWRC Seed Fund Tracking & Analysis System
 
-Data analysis project for Illinois Water Resources Center (IWRC) tracking research funding, student outcomes, and project impact across fiscal years 2016-2024.
+**Illinois Water Resources Center (IWRC)** - Comprehensive tracking and analysis of research funding, student outcomes, and project impact across fiscal years 2016-2024.
 
-## 🎉 November 2025 Update: IWRC Rebranding & Dual-Track Analysis Complete!
+## 🎯 Quick Start
 
-This project has been **completely rebranded with IWRC colors and fonts**, and now includes **dual-track analysis** comparing "All Projects" with "104B Only (Seed Funding)" tracks.
+**[Open Navigation Hub](index.html)** - Professional IWRC-branded interface to browse all content
 
-### What's New
-- ✓ **IWRC Branded Visualizations** - All charts use IWRC colors (#258372 teal, #639757 olive)
-- ✓ **Montserrat Fonts** - Professional typography throughout
-- ✓ **Dual-Track Analysis** - Compare comprehensive portfolio vs seed funding focus
-- ✓ **FINAL_DELIVERABLES** - Organized output folder with static/interactive/PDF formats
-- ✓ **6 Static Charts** - Brand-new generated with proper metrics verification
-- ✓ **Comprehensive Documentation** - New guides for rebranding, award types, and deliverables
+## 📊 Repository Overview
 
-### Quick Links
-- 📖 [Rebranding Summary](docs/REBRANDING_SUMMARY.md) - Overview of changes
-- 📚 [Award Type Analysis Guide](docs/AWARD_TYPE_ANALYSIS_GUIDE.md) - Understanding the dual tracks
-- 📁 [Final Deliverables Guide](docs/FINAL_DELIVERABLES_GUIDE.md) - File structure and contents
-- 📊 [FINAL_DELIVERABLES/](FINAL_DELIVERABLES/) - Generated outputs
+This repository contains:
+- **77 projects** analyzed (2015-2024)
+- **$8.5 million** in investment tracked
+- **304 students** supported
+- **14 Illinois institutions** funded
 
-## Project Structure
+### November 2025 - Major Repository Reorganization
 
-```
-.
-├── data/
-│   ├── source/           # Original Excel files from different fiscal years
-│   ├── consolidated/     # Combined and processed datasets
-│   └── outputs/          # Analysis outputs and summary files
-├── notebooks/
-│   ├── current/          # Active analysis notebooks (LATEST VERSIONS)
-│   └── archive/          # Executed and historical notebook versions
-├── scripts/              # Python utility scripts for data processing
-├── visualizations/
-│   ├── static/           # PNG charts and graphs (300 DPI)
-│   └── interactive/      # HTML interactive visualizations
-└── docs/                 # Documentation and reports
+The repository has been completely reorganized with improved structure, IWRC branding, and comprehensive navigation:
+
+✅ **Clean Organization** - Logical separation of deliverables, analysis, data, and assets
+✅ **IWRC Branding** - Professional branded index pages and CSS theme
+✅ **Comprehensive Documentation** - README.md in every major folder
+✅ **45% Size Reduction** - Removed 128 MB of duplicates (282 MB → 154 MB)
+✅ **Improved Navigation** - Card-based navigation hubs with breadcrumbs
+
+## 📁 Repository Structure
 
 ```
+seed-fund-tracking/
+├── index.html                    # 🏠 Main navigation hub (START HERE)
+├── README.md                     # This file
+│
+├── deliverables/                 # 📊 All final outputs
+│   ├── index.html                # Deliverables navigation
+│   ├── reports/                  # 6 PDF reports
+│   │   ├── executive/            # Executive summary, fact sheet, financial
+│   │   └── detailed/             # Detailed analysis, project breakdowns
+│   └── visualizations/           # Charts and dashboards
+│       ├── static/               # 36 PNG charts (by category)
+│       └── interactive/          # 15 HTML dashboards
+│
+├── data/                         # 📁 Source and processed data
+│   ├── source/                   # Original FY reports
+│   ├── consolidated/             # Main tracking database
+│   └── outputs/                  # Analysis results
+│
+├── analysis/                     # 🔬 Analysis code
+│   ├── notebooks/                # 7 Jupyter notebooks
+│   └── scripts/                  # 44 Python scripts
+│
+├── assets/                       # 🎨 Branding and design
+│   ├── branding/                 # Logos, fonts, guidelines
+│   └── styles/                   # Shared CSS theme
+│
+└── docs/                         # 📚 Documentation (22 files)
+```
 
-## Quick Start
+## 🚀 Quick Access
+
+### For Stakeholders & Leadership
+- [Executive Summary PDF](deliverables/reports/executive/executive_summary.pdf) - High-level overview
+- [Fact Sheet PDF](deliverables/reports/executive/fact_sheet.pdf) - One-page snapshot
+- [Interactive Dashboards](deliverables/visualizations/interactive/index.html) - Browse visualizations
+
+### For Researchers & Analysts
+- [Main Dataset](data/consolidated/IWRC%20Seed%20Fund%20Tracking.xlsx) - Consolidated tracking database
+- [Analysis Notebooks](analysis/notebooks/) - Jupyter notebooks for analysis
+- [Methodology Documentation](docs/METHODOLOGY.md) - Analysis approach
+
+### For Developers
+- [Analysis Scripts](analysis/scripts/) - Python generation scripts
+- [Branding Guidelines](assets/branding/IWRC_BRANDING_GUIDELINES.md) - Colors, fonts, logos
+- [Repository Summary](REPOSITORY_SUMMARY.md) - Detailed structure overview
+
+## 📊 Deliverables Summary
+
+### Reports (6 PDFs)
+**Executive Reports:**
+- Executive Summary (38 KB) - Program overview with key metrics
+- Fact Sheet (33 KB) - One-page impact snapshot
+- Financial Summary (22 KB) - ROI and financial analysis
+
+**Detailed Reports:**
+- Detailed Analysis Report (342 KB) - Comprehensive analysis with charts
+- Project Type Analysis - 104B Only (24 KB) - Base grant breakdown
+- Project Type Analysis - All Projects (25 KB) - Complete breakdown
+
+### Visualizations (51 total)
+**Static Charts (36 PNGs)** - Organized by category:
+- Overview (4): Investment, ROI, project trends
+- Institutions (4): Reach, funding distribution
+- Students (3): Training outcomes
+- Topics (7): Research area analysis
+- Awards (10): Award type comparisons
+- Project Types (8): Type breakdowns
+
+**Interactive Dashboards (15 HTML)**:
+- Core (5): ROI, detailed analysis, investment, students, timeline
+- Geographic (2): Illinois institutions maps
+- Award Types (3): Award analysis dashboards
+- Project Types (4): Interactive breakdowns
+
+## 💻 Technical Setup
 
 ### Prerequisites
 ```bash
 # Python 3.8+ required
-pip3 install pandas openpyxl numpy matplotlib seaborn plotly
+pip install pandas numpy matplotlib plotly openpyxl reportlab folium
 ```
 
 ### Running Analysis
-
-**IMPORTANT: Always work with files in `notebooks/current/` for the latest versions**
-
-1. **Comprehensive ROI Analysis**: [notebooks/current/01_comprehensive_roi_analysis.ipynb](notebooks/current/01_comprehensive_roi_analysis.ipynb)
-   - Complete ROI analysis (2015-2024)
-   - Follow-on funding tracking
-   - Student training metrics
-   - Institutional diversity analysis
-
-2. **ROI Visualizations**: [notebooks/current/02_roi_visualizations.ipynb](notebooks/current/02_roi_visualizations.ipynb)
-   - Investment comparison charts
-   - ROI multiplier visualizations
-   - Student impact graphics
-   - Excel summary reports
-
-3. **Interactive HTML Charts**: [notebooks/current/03_interactive_html_visualizations.ipynb](notebooks/current/03_interactive_html_visualizations.ipynb)
-   - Interactive maps and charts using Plotly
-   - Geographic distribution of institutions
-   - Keyword analysis with hover tooltips
-
-4. **Fact Sheet Static Charts**: [notebooks/current/04_fact_sheet_static_charts.ipynb](notebooks/current/04_fact_sheet_static_charts.ipynb)
-   - Publication-ready static PNG charts
-   - Keyword distribution pie charts
-   - Illinois institution geographic maps
-
-### Data Consolidation
-
-To update the consolidated dataset with new fiscal year data:
-
 ```bash
-python3 scripts/combine_excel_files_v2.py
+# Launch Jupyter for notebooks
+jupyter notebook analysis/notebooks/
+
+# Run specific analysis scripts
+python analysis/scripts/generate_static_visualizations.py
 ```
 
-This script:
-- Combines source Excel files from `data/source/`
-- Handles multi-level headers intelligently
-- Creates automatic backups
-- Outputs to `data/consolidated/IWRC Seed Fund Tracking.xlsx`
-
-## Key Data Files
-
-### Most Recent (Priority Files)
-- **[data/consolidated/IWRC Seed Fund Tracking.xlsx](data/consolidated/IWRC Seed Fund Tracking.xlsx)** - Main consolidated dataset (539 rows, 35 columns)
-- **[data/consolidated/fact sheet data.xlsx](data/consolidated/fact sheet data.xlsx)** - Curated data for fact sheets and reports
-- **[data/outputs/IWRC_ROI_Analysis_Summary.xlsx](data/outputs/IWRC_ROI_Analysis_Summary.xlsx)** - Latest ROI calculations
-
-### Source Data Files
-All located in `data/source/`:
-- `FY24_reporting_IL.xlsx` - FY2024 Illinois reporting (MOST RECENT)
-- `FY23_reporting_IL.xlsx` - FY2023 Illinois reporting
-- `IWRC-2022-WRRA-Annual-Report-v.101923.xlsx` - FY2022 annual report
-- `IL_5yr_FY16_20_2.xlsx` - 5-year aggregate (FY2016-2020)
-
-## Key Analysis Outputs
-
-### Latest Visualizations
-Located in `visualizations/`:
-
-**Static Images** (`static/`):
-- `roi_comparison.png` - ROI analysis comparison
-- `iwrc_investment_comparison.png` - Investment vs. matching funds
-- `students_trained.png` - Student training outcomes
-- `student_distribution_pie.png` - Student type distribution
-- `2025_keyword_pie_chart.png` - Research keyword distribution
-- `2025_illinois_institutions_map.png` - Geographic institution map
-
-**Interactive** (`interactive/`):
-- `IWRC_ROI_Analysis_Report.html` - Interactive ROI dashboard
-- `2025_keyword_pie_chart_interactive.html` - Interactive keyword analysis (NEW!)
-- `2025_illinois_institutions_map_interactive.html` - Interactive institution map (NEW!)
-
-## Documentation
-
-Located in `docs/`:
-- **[QUICK_START_GUIDE.md](docs/QUICK_START_GUIDE.md)** - Fast-start guide for common tasks
-- **[CLAUDE.md](docs/CLAUDE.md)** - Project instructions and architecture
-- **[ANALYSIS_SUMMARY.md](docs/ANALYSIS_SUMMARY.md)** - Analysis findings and insights
-- **[RESULTS_READY.md](docs/RESULTS_READY.md)** - Latest results and deliverables
-- **[NOTEBOOK_REVIEW_REPORT.md](docs/NOTEBOOK_REVIEW_REPORT.md)** - Notebook quality review
-- **[QUICK_FIX_GUIDE.md](docs/QUICK_FIX_GUIDE.md)** - Troubleshooting common issues
-
-## Data Schema
-
-The consolidated dataset includes 35 columns:
-- **Project Info**: Project ID, Title, Award Type
-- **Personnel**: PI Name, Email, Institution
-- **Funding**: Award Amount, Matching Funds
-- **Students**: PhD, MS, Undergraduate, Post Doc counts (WRRA-funded and matching)
-- **Diversity**: Underrepresented minority and female student data
-- **Research**: Science priorities, keywords, methodologies
-- **Outputs**: Publications, presentations, awards, DOIs
-
-## Common Workflows
-
-### 1. Generate Updated Fact Sheet Visualizations
+### Generating Deliverables
 ```bash
-# Run the fact sheet notebook
-jupyter notebook notebooks/current/04_fact_sheet_static_charts.ipynb
+# Execute all notebooks in order
+python analysis/scripts/execute_notebooks.py
+
+# Generate final reports and visualizations
+python analysis/scripts/generate_final_deliverables_v2.py
 ```
 
-### 2. Create Interactive Maps
-```bash
-# Run the interactive visualizations notebook
-jupyter notebook notebooks/current/03_interactive_html_visualizations.ipynb
-```
+## 📖 Documentation
 
-### 3. Generate Complete ROI Analysis
-```bash
-# Run comprehensive analysis notebook
-jupyter notebook notebooks/current/01_comprehensive_roi_analysis.ipynb
-```
+### Core Docs
+- [METHODOLOGY.md](docs/METHODOLOGY.md) - Analysis methodology
+- [DATA_DICTIONARY.md](docs/DATA_DICTIONARY.md) - Data structure and columns
+- [FINDINGS.md](docs/FINDINGS.md) - Research findings
 
-### 4. Update Consolidated Dataset
-```bash
-# Add new Excel file to data/source/
-# Then run:
-python3 scripts/combine_excel_files_v2.py
-```
+### Guides
+- [AWARD_TYPE_ANALYSIS_GUIDE.md](docs/AWARD_TYPE_ANALYSIS_GUIDE.md) - Award types explained
+- [FINAL_DELIVERABLES_GUIDE.md](docs/FINAL_DELIVERABLES_GUIDE.md) - Deliverables structure
+- [REORGANIZATION_NOVEMBER_2025.md](docs/REORGANIZATION_NOVEMBER_2025.md) - November reorganization
 
-## Important Notes
+### All Documentation
+See [docs/](docs/) folder for complete documentation (22 files)
 
-### Excel File Structure
-- Source files use **multi-level headers** (3 rows) with merged cells
-- Column names are in the **second header level** (index 1)
-- Script handles this automatically via `header=[0,1,2]`
+## 🎨 IWRC Branding
 
-### Data Integrity
-- Never modify raw data values during consolidation
-- All backups are automatic (files with `_BACKUP` suffix)
-- Original source files remain untouched in `data/source/`
+### Brand Colors
+- **Primary:** #258372 (Teal)
+- **Secondary:** #639757 (Olive)
+- **Text:** #54595F (Gray)
+- **Accent:** #FCC080 (Peach)
 
-## Contributing
+### Typography
+- **Font Family:** Montserrat (Regular, Bold)
+- **Headers:** Bold weight
+- **Body:** Regular weight
 
-When adding new analysis:
-1. Create new notebook in `notebooks/current/`
-2. Follow naming convention: `YYYY_descriptive_name.ipynb`
-3. Save outputs to appropriate `visualizations/` subfolder
-4. Update this README with new analysis descriptions
+See [IWRC_BRANDING_GUIDELINES.md](assets/branding/IWRC_BRANDING_GUIDELINES.md) for complete specifications.
 
-## Version History
+## 📈 Key Metrics (2015-2024)
 
-- **Nov 18, 2025**: Major repository reorganization
-  - Removed 26 MB of duplicate files (exports/ directory)
-  - Cleaned up legacy files and temporary data
-  - Renamed notebooks with clear, sequential naming scheme
-  - Consolidated documentation
-  - Moved utility scripts to proper locations
-- **Nov 18, 2025**: Latest ROI analysis and 2025 visualizations
-- **Nov 6, 2025**: Initial consolidation of FY16-FY24 data
+- **Projects:** 77 unique projects
+- **Investment:** $8,516,278 (10-year), $7,319,144 (5-year)
+- **Students:** 304 total trained
+- **Institutions:** 14 Illinois institutions
+- **ROI:** 3% overall return on investment
 
-## Support
+## 🔄 Data Updates
 
-For questions about:
-- Data structure: See [docs/CLAUDE.md](docs/CLAUDE.md)
-- Quick tasks: See [docs/QUICK_START_GUIDE.md](docs/QUICK_START_GUIDE.md)
-- Analysis results: See [docs/RESULTS_READY.md](docs/RESULTS_READY.md)
+### Update Procedure
+1. Add new FY report to `data/source/`
+2. Update `data/consolidated/IWRC Seed Fund Tracking.xlsx`
+3. Run analysis notebooks in `analysis/notebooks/current/`
+4. Regenerate deliverables with scripts in `analysis/scripts/`
+
+### Current Data Coverage
+- **Source:** FY2016 - FY2024 (9 fiscal years)
+- **Analysis Period:** 2015-2024 (10-year period)
+- **Last Updated:** November 27, 2025
+
+## 🤝 Contributing
+
+For questions or contributions:
+1. Review documentation in [docs/](docs/)
+2. Check [METHODOLOGY.md](docs/METHODOLOGY.md) for analysis approach
+3. Follow [IWRC branding guidelines](assets/branding/IWRC_BRANDING_GUIDELINES.md)
+
+## 📞 Contact
+
+**Illinois Water Resources Center (IWRC)**
+University of Illinois System
+
+## 📄 License
+
+Data and analysis for Illinois Water Resources Center internal use and reporting.
+
+---
+
+**Navigation:** [Home](index.html) | [Deliverables](deliverables/) | [Data](data/) | [Analysis](analysis/) | [Docs](docs/)
+
+**Last Updated:** November 27, 2025 | **Repository Size:** 154 MB | **Version:** 2.0 (Reorganized)

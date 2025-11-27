@@ -73,4 +73,4 @@ Thumbs.db
 .specstory/
 
 # Claude development guidance (local only)
-docs/CLAUDE.md
+CLAUDE.md

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <style>
+        #map_6dce6fdc45843ce079a02f1411744a32 {
+            position: relative;
+            width: 100.0%;
+            height: 100.0%;
+            left: 0.0%;
+            top: 0.0%;
+        }
+
+        .leaflet-container {
+            font-size: 1rem;
+        }
+    </style>
+
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+
+    <style>
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+    </style>
+
+    <script>
+        L_NO_TOUCH = false;
+        L_DISABLE_3D = false;
+    </script>
+
+
+    <script
+        src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+</head>
+
+<body>
+
+
+    <div style="position: fixed;
+                top: 10px; left: 50px; width: 500px; height: 90px;
+                background-color: white; border:2px solid grey; z-index:9999;
+                font-size:14px; padding: 10px">
+        <h4 style="margin: 0 0 5px 0;">IWRC Seed Fund Geographic Distribution</h4>
+        <p style="margin: 5px 0; font-size: 12px;">
+            <b>2015-2024:</b> 77 Projects | $8.5M Investment | 304 Students
+        </p>
+        <p style="margin: 5px 0; font-size: 11px;">
+            Marker size = funding amount | Color = project count
+        </p>
+    </div>
+
+
+    <div class="folium-map" id="map_6dce6fdc45843ce079a02f1411744a32"></div>
+
+</body>
+<script>
+
+
+    var map_6dce6fdc45843ce079a02f1411744a32 = L.map(
+        "map_6dce6fdc45843ce079a02f1411744a32",
+        {
+            center: [40.0, -89.0],
+            crs: L.CRS.EPSG3857,
+            ...{
+                "zoom": 7,
+                "zoomControl": true,
+                "preferCanvas": false,
+            }
+
+        }
+    );
+
+
+
+
+
+    var tile_layer_1550957ba002df52af01b89310ef5b0c = L.tileLayer(
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            "minZoom": 0,
+            "maxZoom": 19,
+            "maxNativeZoom": 19,
+            "noWrap": false,
+            "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+            "subdomains": "abc",
+            "detectRetina": false,
+            "tms": false,
+            "opacity": 1,
+        }
+
+    );
+
+
+    tile_layer_1550957ba002df52af01b89310ef5b0c.addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var circle_marker_8e8b14a40d2dac183e8c5673423ab1ca = L.circleMarker(
+        [40.102, -88.2272],
+        { "bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 35.0, "stroke": true, "weight": 2 }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var popup_6e72949e7906bf0692bb1b17e86c8b40 = L.popup({
+        "maxWidth": 300,
+    });
+
+
+
+    var html_842266297cde13e22d9abde4e569bc82 = $(`<div id="html_842266297cde13e22d9abde4e569bc82" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Montserrat, sans-serif; width: 250px;">                 <h4 style="margin: 0 0 10px 0; color: #333;">University of Illinois Urbana-Champaign</h4>                 <hr style="margin: 5px 0;">                 <p style="margin: 5px 0;"><b>Total Funding:</b> $3,500,000</p>                 <p style="margin: 5px 0;"><b>Projects:</b> 35</p>                 <p style="margin: 5px 0;"><b>Students:</b> 120</p>                 <p style="margin: 5px 0;"><b>Avg per Project:</b> $100,000</p>             </div>             </div>`)[0];
+    popup_6e72949e7906bf0692bb1b17e86c8b40.setContent(html_842266297cde13e22d9abde4e569bc82);
+
+
+
+    circle_marker_8e8b14a40d2dac183e8c5673423ab1ca.bindPopup(popup_6e72949e7906bf0692bb1b17e86c8b40)
+        ;
+
+
+
+
+    var marker_462d33b8770219fab285910e6a605700 = L.marker(
+        [40.102, -88.2272],
+        {
+        }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var div_icon_2e3b50c52df0f00be3b767242e929564 = L.divIcon({
+        "html": "\n                    \u003cdiv style=\"font-size: 10px; color: black; font-weight: bold;\n                         background: white; padding: 2px 5px; border-radius: 3px;\n                         border: 1px solid #333; white-space: nowrap;\"\u003e\n                        University\n                    \u003c/div\u003e\n                ",
+        "className": "empty",
+    });
+
+
+    marker_462d33b8770219fab285910e6a605700.setIcon(div_icon_2e3b50c52df0f00be3b767242e929564);
+
+
+    var circle_marker_988b5c29f8ad73b2ecb53b96a70ddf1b = L.circleMarker(
+        [42.0565, -87.6753],
+        { "bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 20.0, "stroke": true, "weight": 2 }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var popup_4cc079f597f860f30430fb2fc8584bc8 = L.popup({
+        "maxWidth": 300,
+    });
+
+
+
+    var html_d2cbf029da067938305bd9f1aa04a089 = $(`<div id="html_d2cbf029da067938305bd9f1aa04a089" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Montserrat, sans-serif; width: 250px;">                 <h4 style="margin: 0 0 10px 0; color: #333;">Northwestern University</h4>                 <hr style="margin: 5px 0;">                 <p style="margin: 5px 0;"><b>Total Funding:</b> $2,000,000</p>                 <p style="margin: 5px 0;"><b>Projects:</b> 18</p>                 <p style="margin: 5px 0;"><b>Students:</b> 80</p>                 <p style="margin: 5px 0;"><b>Avg per Project:</b> $111,111</p>             </div>             </div>`)[0];
+    popup_4cc079f597f860f30430fb2fc8584bc8.setContent(html_d2cbf029da067938305bd9f1aa04a089);
+
+
+
+    circle_marker_988b5c29f8ad73b2ecb53b96a70ddf1b.bindPopup(popup_4cc079f597f860f30430fb2fc8584bc8)
+        ;
+
+
+
+
+    var marker_b77f88f359538f0f3a650bbd851849bc = L.marker(
+        [42.0565, -87.6753],
+        {
+        }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var div_icon_7bd348986c4953a68a574deb1ee60e58 = L.divIcon({
+        "html": "\n                    \u003cdiv style=\"font-size: 10px; color: black; font-weight: bold;\n                         background: white; padding: 2px 5px; border-radius: 3px;\n                         border: 1px solid #333; white-space: nowrap;\"\u003e\n                        Northwestern\n                    \u003c/div\u003e\n                ",
+        "className": "empty",
+    });
+
+
+    marker_b77f88f359538f0f3a650bbd851849bc.setIcon(div_icon_7bd348986c4953a68a574deb1ee60e58);
+
+
+    var circle_marker_270e71b3b18d4d2741507b6381d8632a = L.circleMarker(
+        [41.8348, -87.6266],
+        { "bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 12.0, "stroke": true, "weight": 2 }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var popup_0f9d860a3b6807efa70d4145aba5bcb6 = L.popup({
+        "maxWidth": 300,
+    });
+
+
+
+    var html_43370b6ad984a76edaebccfc48a6c333 = $(`<div id="html_43370b6ad984a76edaebccfc48a6c333" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Montserrat, sans-serif; width: 250px;">                 <h4 style="margin: 0 0 10px 0; color: #333;">Illinois Institute of Technology</h4>                 <hr style="margin: 5px 0;">                 <p style="margin: 5px 0;"><b>Total Funding:</b> $1,200,000</p>                 <p style="margin: 5px 0;"><b>Projects:</b> 12</p>                 <p style="margin: 5px 0;"><b>Students:</b> 50</p>                 <p style="margin: 5px 0;"><b>Avg per Project:</b> $100,000</p>             </div>             </div>`)[0];
+    popup_0f9d860a3b6807efa70d4145aba5bcb6.setContent(html_43370b6ad984a76edaebccfc48a6c333);
+
+
+
+    circle_marker_270e71b3b18d4d2741507b6381d8632a.bindPopup(popup_0f9d860a3b6807efa70d4145aba5bcb6)
+        ;
+
+
+
+
+    var marker_c63303c44b228a241c5f8ee85b477f5b = L.marker(
+        [41.8348, -87.6266],
+        {
+        }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var div_icon_fea76d14d577e1e5d30257d69df23d07 = L.divIcon({
+        "html": "\n                    \u003cdiv style=\"font-size: 10px; color: black; font-weight: bold;\n                         background: white; padding: 2px 5px; border-radius: 3px;\n                         border: 1px solid #333; white-space: nowrap;\"\u003e\n                        Illinois\n                    \u003c/div\u003e\n                ",
+        "className": "empty",
+    });
+
+
+    marker_c63303c44b228a241c5f8ee85b477f5b.setIcon(div_icon_fea76d14d577e1e5d30257d69df23d07);
+
+
+    var circle_marker_ed59e557bcf89dbbf015043110ca2cab = L.circleMarker(
+        [41.7886, -87.5987],
+        { "bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2 }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var popup_b2fd230531874df309f3bc98dcaabc03 = L.popup({
+        "maxWidth": 300,
+    });
+
+
+
+    var html_64d1ec411ffe04a6515b55311b99b13b = $(`<div id="html_64d1ec411ffe04a6515b55311b99b13b" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Montserrat, sans-serif; width: 250px;">                 <h4 style="margin: 0 0 10px 0; color: #333;">University of Chicago</h4>                 <hr style="margin: 5px 0;">                 <p style="margin: 5px 0;"><b>Total Funding:</b> $800,000</p>                 <p style="margin: 5px 0;"><b>Projects:</b> 6</p>                 <p style="margin: 5px 0;"><b>Students:</b> 25</p>                 <p style="margin: 5px 0;"><b>Avg per Project:</b> $133,333</p>             </div>             </div>`)[0];
+    popup_b2fd230531874df309f3bc98dcaabc03.setContent(html_64d1ec411ffe04a6515b55311b99b13b);
+
+
+
+    circle_marker_ed59e557bcf89dbbf015043110ca2cab.bindPopup(popup_b2fd230531874df309f3bc98dcaabc03)
+        ;
+
+
+
+
+    var marker_674b7e79ce527b94cbc10679be63a466 = L.marker(
+        [41.7886, -87.5987],
+        {
+        }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var div_icon_e4c8d00b8ae02080d7b7d2a0d85bfb55 = L.divIcon({
+        "html": "\n                    \u003cdiv style=\"font-size: 10px; color: black; font-weight: bold;\n                         background: white; padding: 2px 5px; border-radius: 3px;\n                         border: 1px solid #333; white-space: nowrap;\"\u003e\n                        University\n                    \u003c/div\u003e\n                ",
+        "className": "empty",
+    });
+
+
+    marker_674b7e79ce527b94cbc10679be63a466.setIcon(div_icon_e4c8d00b8ae02080d7b7d2a0d85bfb55);
+
+
+    var circle_marker_85769320a9ff342b2d46f412fc9a1e64 = L.circleMarker(
+        [37.7213, -89.2167],
+        { "bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2 }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var popup_890ea44421a151a2cc0eb2673640f5c8 = L.popup({
+        "maxWidth": 300,
+    });
+
+
+
+    var html_7ae4216ca4de66c8312bc67966701570 = $(`<div id="html_7ae4216ca4de66c8312bc67966701570" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Montserrat, sans-serif; width: 250px;">                 <h4 style="margin: 0 0 10px 0; color: #333;">Southern Illinois University</h4>                 <hr style="margin: 5px 0;">                 <p style="margin: 5px 0;"><b>Total Funding:</b> $500,000</p>                 <p style="margin: 5px 0;"><b>Projects:</b> 4</p>                 <p style="margin: 5px 0;"><b>Students:</b> 15</p>                 <p style="margin: 5px 0;"><b>Avg per Project:</b> $125,000</p>             </div>             </div>`)[0];
+    popup_890ea44421a151a2cc0eb2673640f5c8.setContent(html_7ae4216ca4de66c8312bc67966701570);
+
+
+
+    circle_marker_85769320a9ff342b2d46f412fc9a1e64.bindPopup(popup_890ea44421a151a2cc0eb2673640f5c8)
+        ;
+
+
+
+
+    var marker_8f9c6130bba65ed45f501420fe1ff549 = L.marker(
+        [37.7213, -89.2167],
+        {
+        }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var div_icon_51bf0e52f9ac737a0873a44f6c40985e = L.divIcon({
+        "html": "\n                    \u003cdiv style=\"font-size: 10px; color: black; font-weight: bold;\n                         background: white; padding: 2px 5px; border-radius: 3px;\n                         border: 1px solid #333; white-space: nowrap;\"\u003e\n                        Southern\n                    \u003c/div\u003e\n                ",
+        "className": "empty",
+    });
+
+
+    marker_8f9c6130bba65ed45f501420fe1ff549.setIcon(div_icon_51bf0e52f9ac737a0873a44f6c40985e);
+
+
+    var circle_marker_2ceb83fa83fab81c7a7664cdf07a2edf = L.circleMarker(
+        [41.9306, -88.7712],
+        { "bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2 }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var popup_06e69a23a6f8866c8554c17291106342 = L.popup({
+        "maxWidth": 300,
+    });
+
+
+
+    var html_a58a5c7e842bd695c5a90f7ba3ea49e7 = $(`<div id="html_a58a5c7e842bd695c5a90f7ba3ea49e7" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Montserrat, sans-serif; width: 250px;">                 <h4 style="margin: 0 0 10px 0; color: #333;">Northern Illinois University</h4>                 <hr style="margin: 5px 0;">                 <p style="margin: 5px 0;"><b>Total Funding:</b> $300,000</p>                 <p style="margin: 5px 0;"><b>Projects:</b> 1</p>                 <p style="margin: 5px 0;"><b>Students:</b> 8</p>                 <p style="margin: 5px 0;"><b>Avg per Project:</b> $300,000</p>             </div>             </div>`)[0];
+    popup_06e69a23a6f8866c8554c17291106342.setContent(html_a58a5c7e842bd695c5a90f7ba3ea49e7);
+
+
+
+    circle_marker_2ceb83fa83fab81c7a7664cdf07a2edf.bindPopup(popup_06e69a23a6f8866c8554c17291106342)
+        ;
+
+
+
+
+    var marker_ee97f25132bee8b19bfafe0ae9b9983e = L.marker(
+        [41.9306, -88.7712],
+        {
+        }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var div_icon_16cc3a589aa12d37386ea732041c590a = L.divIcon({
+        "html": "\n                    \u003cdiv style=\"font-size: 10px; color: black; font-weight: bold;\n                         background: white; padding: 2px 5px; border-radius: 3px;\n                         border: 1px solid #333; white-space: nowrap;\"\u003e\n                        Northern\n                    \u003c/div\u003e\n                ",
+        "className": "empty",
+    });
+
+
+    marker_ee97f25132bee8b19bfafe0ae9b9983e.setIcon(div_icon_16cc3a589aa12d37386ea732041c590a);
+
+
+    var circle_marker_539a0f68db37b7d83079dbb068dd0f51 = L.circleMarker(
+        [40.5142, -88.9907],
+        { "bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.6, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10, "stroke": true, "weight": 2 }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var popup_c250668406e3ee1faf95e2a6adab2572 = L.popup({
+        "maxWidth": 300,
+    });
+
+
+
+    var html_62640c80b2d46cf3efaad5dabccbe5c0 = $(`<div id="html_62640c80b2d46cf3efaad5dabccbe5c0" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Montserrat, sans-serif; width: 250px;">                 <h4 style="margin: 0 0 10px 0; color: #333;">Illinois State University</h4>                 <hr style="margin: 5px 0;">                 <p style="margin: 5px 0;"><b>Total Funding:</b> $200,000</p>                 <p style="margin: 5px 0;"><b>Projects:</b> 1</p>                 <p style="margin: 5px 0;"><b>Students:</b> 6</p>                 <p style="margin: 5px 0;"><b>Avg per Project:</b> $200,000</p>             </div>             </div>`)[0];
+    popup_c250668406e3ee1faf95e2a6adab2572.setContent(html_62640c80b2d46cf3efaad5dabccbe5c0);
+
+
+
+    circle_marker_539a0f68db37b7d83079dbb068dd0f51.bindPopup(popup_c250668406e3ee1faf95e2a6adab2572)
+        ;
+
+
+
+
+    var marker_776f9f97369caa67ce304ec71f157437 = L.marker(
+        [40.5142, -88.9907],
+        {
+        }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+    var div_icon_be5ac0b1e11253690cdea5456317c590 = L.divIcon({
+        "html": "\n                    \u003cdiv style=\"font-size: 10px; color: black; font-weight: bold;\n                         background: white; padding: 2px 5px; border-radius: 3px;\n                         border: 1px solid #333; white-space: nowrap;\"\u003e\n                        Illinois\n                    \u003c/div\u003e\n                ",
+        "className": "empty",
+    });
+
+
+    marker_776f9f97369caa67ce304ec71f157437.setIcon(div_icon_be5ac0b1e11253690cdea5456317c590);
+
+
+    var heat_map_ec2f18957f98fd96b979c0d3ea7d7d7b = L.heatLayer(
+        [[40.102, -88.2272, 35.0], [42.0565, -87.6753, 20.0], [41.8348, -87.6266, 12.0], [41.7886, -87.5987, 8.0], [37.7213, -89.2167, 5.0], [41.9306, -88.7712, 3.0], [40.5142, -88.9907, 2.0]],
+        {
+            "minOpacity": 0.5,
+            "maxZoom": 18,
+            "radius": 25,
+            "blur": 15,
+        }
+    );
+
+
+    var layer_control_4c2918729baed93ead6db49d877d9d90_layers = {
+        base_layers: {
+            "openstreetmap": tile_layer_1550957ba002df52af01b89310ef5b0c,
+        },
+        overlays: {
+            "Funding Heatmap": heat_map_ec2f18957f98fd96b979c0d3ea7d7d7b,
+        },
+    };
+    let layer_control_4c2918729baed93ead6db49d877d9d90 = L.control.layers(
+        layer_control_4c2918729baed93ead6db49d877d9d90_layers.base_layers,
+        layer_control_4c2918729baed93ead6db49d877d9d90_layers.overlays,
+        {
+            "position": "topright",
+            "collapsed": true,
+            "autoZIndex": true,
+        }
+    ).addTo(map_6dce6fdc45843ce079a02f1411744a32);
+
+
+</script>
+
+</html>

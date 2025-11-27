@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IWRC Deliverables - Navigation Hub</title>
+    <link rel="stylesheet" href="../assets/styles/iwrc-theme.css">
+    <style>
+        .breadcrumb {
+            padding: 20px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .breadcrumb a {
+            color: var(--iwrc-primary);
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section h2 {
+            color: var(--iwrc-primary);
+            border-bottom: 3px solid var(--iwrc-primary);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .file-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .file-card:hover {
+            border-color: var(--iwrc-primary);
+            transform: translateY(-3px);
+            box-shadow: var(--iwrc-shadow-md);
+        }
+
+        .file-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--iwrc-primary);
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        .file-desc {
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .file-size {
+            color: #999;
+            font-size: 0.8em;
+        }
+
+        .file-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 20px;
+            background: var(--iwrc-gradient-primary);
+            color: white;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .file-link:hover {
+            transform: scale(1.05);
+            box-shadow: var(--iwrc-shadow-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="../index.html">🏠 Home</a> / <strong>Deliverables</strong>
+        </div>
+
+        <div class="header-iwrc">
+            <img src="../assets/branding/logos/IWRC_Logo.svg" alt="IWRC Logo" style="width: 80px; height: auto; margin-bottom: 20px; background: white; padding: 10px; border-radius: 10px;">
+            <h1>IWRC Deliverables</h1>
+            <p class="subtitle">Reports, Visualizations, and Analysis Outputs</p>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value">6</span>
+                    <span class="stat-label">PDF Reports</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">36</span>
+                    <span class="stat-label">Static Visualizations</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">15</span>
+                    <span class="stat-label">Interactive Dashboards</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Reports Section -->
+            <div class="section">
+                <h2>📄 PDF Reports</h2>
+                <div class="file-grid">
+                    <div class="file-card">
+                        <div class="file-icon">📊</div>
+                        <div class="file-name">Executive Summary</div>
+                        <div class="file-desc">High-level program overview with key metrics and impact (2015-2024)</div>
+                        <div class="file-size">38 KB</div>
+                        <a href="reports/executive/executive_summary.pdf" class="file-link">View PDF</a>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">📋</div>
+                        <div class="file-name">Fact Sheet</div>
+                        <div class="file-desc">One-page snapshot of program impact and accomplishments</div>
+                        <div class="file-size">33 KB</div>
+                        <a href="reports/executive/fact_sheet.pdf" class="file-link">View PDF</a>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">💰</div>
+                        <div class="file-name">Financial Summary</div>
+                        <div class="file-desc">Financial metrics, investment breakdown, and ROI analysis</div>
+                        <div class="file-size">22 KB</div>
+                        <a href="reports/executive/financial_summary.pdf" class="file-link">View PDF</a>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">📈</div>
+                        <div class="file-name">Detailed Analysis Report</div>
+                        <div class="file-desc">Comprehensive analysis with charts, trends, and insights</div>
+                        <div class="file-size">342 KB</div>
+                        <a href="reports/detailed/detailed_analysis_report.pdf" class="file-link">View PDF</a>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">🔬</div>
+                        <div class="file-name">Project Type Analysis - 104B Only</div>
+                        <div class="file-desc">Breakdown of 104B base grant projects</div>
+                        <div class="file-size">24 KB</div>
+                        <a href="reports/detailed/project_type_analysis_104b_only.pdf" class="file-link">View PDF</a>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">🔬</div>
+                        <div class="file-name">Project Type Analysis - All Projects</div>
+                        <div class="file-desc">Comprehensive project type breakdown across all awards</div>
+                        <div class="file-size">25 KB</div>
+                        <a href="reports/detailed/project_type_analysis_all_projects.pdf" class="file-link">View PDF</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualizations Section -->
+            <div class="section">
+                <h2>📊 Visualizations</h2>
+                <div class="file-grid">
+                    <div class="file-card">
+                        <div class="file-icon">🖼️</div>
+                        <div class="file-name">Static Visualizations</div>
+                        <div class="file-desc">36 high-resolution PNG charts organized by category</div>
+                        <div class="file-size">Overview • Institutions • Students • Topics • Awards • Project Types</div>
+                        <a href="visualizations/static/" class="file-link">Browse Charts</a>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">🌐</div>
+                        <div class="file-name">Interactive Dashboards</div>
+                        <div class="file-desc">15 interactive HTML visualizations with hover, zoom, and filtering</div>
+                        <div class="file-size">Core • Geographic • Award Types • Project Types</div>
+                        <a href="visualizations/interactive/index.html" class="file-link">Open Dashboards</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Navigation -->
+            <div class="section">
+                <h2>🚀 Quick Navigation</h2>
+                <div class="file-grid">
+                    <div class="file-card">
+                        <div class="file-icon">🗺️</div>
+                        <div class="file-name">Geographic Map</div>
+                        <div class="file-desc">Interactive map of Illinois institutions with detailed project information</div>
+                        <a href="visualizations/interactive/geographic/institutions_map_enhanced.html" class="file-link">View Map</a>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">📊</div>
+                        <div class="file-name">ROI Dashboard</div>
+                        <div class="file-desc">Comprehensive ROI analysis and investment trends</div>
+                        <a href="visualizations/interactive/core/roi_analysis_dashboard.html" class="file-link">View Dashboard</a>
+                    </div>
+                    <div class="file-card">
+                        <div class="file-icon">🎓</div>
+                        <div class="file-name">Student Analysis</div>
+                        <div class="file-desc">Student training outcomes and distribution</div>
+                        <a href="visualizations/interactive/core/students_interactive.html" class="file-link">View Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-iwrc">
+            <p><strong>IWRC Deliverables</strong></p>
+            <p>All final outputs from the Seed Fund Tracking & Analysis System</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">
+                Last Updated: November 27, 2025
+            </p>
+        </div>
+    </div>
+</body>
+</html>
