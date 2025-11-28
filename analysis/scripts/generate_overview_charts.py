@@ -14,6 +14,7 @@ from pathlib import Path
 import sys
 import os
 import re
+import textwrap
 
 # Add scripts directory to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -428,11 +429,8 @@ def generate_investment_by_institution(metrics):
     # Add labels
     for bar in bars:
         width = bar.get_width()
-        # Format as $X.XXM or $XXXK depending on size
-        if width >= 1e6:
-            label = f'${width/1e6:.2f}M'
-        else:
-            label = f'${width/1e3:.0f}K'
+        # Format as full number with commas
+        label = f'${width:,.0f}'
             
         ax.text(width + (inst_funding.max() * 0.01), bar.get_y() + bar.get_height()/2, 
                 label,
@@ -517,8 +515,17 @@ def generate_summary_dashboard(metrics):
         ax.add_patch(rect)
 
     # Add ROI Explanation
-    fig.text(0.5, 0.02, "ROI Multiplier = Total Follow-on Funding / Total Seed Investment", 
-             ha='center', fontsize=12, style='italic', color=COLORS['text'])
+    roi_explanation = (
+        "The ROI multiplier is calculated by dividing the total follow-on funding (monetary benefits) "
+        "by the total seed investment. This metric demonstrates the leverage effect of the seed funding "
+        "program, showing how much external funding is generated for every dollar invested. Note that "
+        "this calculation strictly uses monetary benefits recorded in the dataset and excludes "
+        "non-monetary impacts."
+    )
+    wrapped_explanation = "\n".join(textwrap.wrap(roi_explanation, width=120))
+    
+    fig.text(0.5, 0.02, wrapped_explanation, 
+             ha='center', va='bottom', fontsize=11, style='italic', color=COLORS['text'])
 
     plt.tight_layout()
     save_fig('summary_dashboard.png', 'overview')
