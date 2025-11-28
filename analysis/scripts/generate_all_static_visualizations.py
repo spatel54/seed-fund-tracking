@@ -99,6 +99,54 @@ def extract_year(project_id):
 df['Year'] = df['Project_ID'].apply(extract_year)
 df = df[df['Year'].notna()]
 
+# Standardize institution names to fix duplicates and infer from PI names
+def standardize_institution_with_inference(row):
+    """
+    Standardize institution names to combine variants.
+    Infers institution from PI name for NULL entries (marked with *).
+    """
+    name = row['Institution']
+    pi_name = row.get('PI')
+
+    if pd.isna(name):
+        # Attempt to infer from PI name for NULL institutions
+        if pd.notna(pi_name):
+            pi_str = str(pi_name).strip()
+
+            # Known IWRC/UIUC personnel (based on research)
+            # Mark with asterisk to indicate inferred value
+            if any(known_pi in pi_str for known_pi in ['James Angel', 'Lisa Merrifield', 'Brian Miller',
+                                                         'Yu-Feng Lin', 'Robert Hudson', 'Gary Parker',
+                                                         'Bruce Rhoads', 'Ashlynn Stillwell', 'John Kelly']):
+                return 'University of Illinois at Urbana-Champaign*'
+
+        return "Unknown"
+
+    name = str(name).strip()
+
+    # UIUC standardization - combine all variants
+    if 'urbana' in name.lower() and 'champaign' in name.lower():
+        return 'University of Illinois at Urbana-Champaign'
+
+    # Generic "University of Illinois" → UIUC (verified from project departments)
+    if name == 'University of Illinois':
+        return 'University of Illinois at Urbana-Champaign'
+
+    # SIU standardization
+    if name.lower().startswith('southern illinois university'):
+        if 'carbondale' in name.lower():
+            return 'Southern Illinois University at Carbondale'
+        return 'Southern Illinois University'
+
+    # UIC standardization
+    if 'university of illinois chicago' in name.lower() or name == 'UIC':
+        return 'University of Illinois Chicago'
+
+    return name
+
+# Apply standardization with PI inference
+df['Institution'] = df.apply(standardize_institution_with_inference, axis=1)
+
 # Clean numeric columns
 numeric_cols = ['IWRC_Investment', 'Follow_on_Funding', 'PhD_Students',
                 'Masters_Students', 'Undergraduate_Students', 'Post_Doctoral_Students']
@@ -741,7 +789,8 @@ plt.close()
 print("Generating 9/10: top_institutions.png...")
 
 # Get top 10 institutions by funding (10-year period)
-institution_funding = df_10yr.groupby('Institution')['IWRC_Investment'].sum().sort_values(ascending=True).tail(10)
+# Exclude 'Unknown' entries (NULL institutions from source data)
+institution_funding = df_10yr[df_10yr['Institution'] != 'Unknown'].groupby('Institution')['IWRC_Investment'].sum().sort_values(ascending=True).tail(10)
 
 fig, ax = plt.subplots(figsize=(12, 8), dpi=300)
 fig.patch.set_facecolor('white')
@@ -760,10 +809,14 @@ ax.set_xlabel('IWRC Investment (Millions USD)', fontsize=12, fontweight='bold')
 ax.set_title('Top 10 Institutions by IWRC Funding (2015-2024)', fontsize=14, fontweight='bold', pad=20)
 ax.grid(axis='x', alpha=0.3)
 
+# Add disclaimer about inferred institutions
+disclaimer_text = '*Institution inferred from PI affiliation (source data had NULL institution)'
+fig.text(0.5, 0.02, disclaimer_text, ha='center', fontsize=8, style='italic', color='gray')
+
 for spine in ['top', 'right']:
     ax.spines[spine].set_visible(False)
 
-plt.tight_layout()
+plt.tight_layout(rect=[0, 0.03, 1, 1])  # Make room for disclaimer
 plt.savefig(OUTPUT_DIR / 'top_institutions.png', dpi=300, bbox_inches='tight',
             facecolor='white', edgecolor='none')
 plt.close()

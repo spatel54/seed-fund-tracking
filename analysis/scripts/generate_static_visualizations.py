@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import seaborn as sns
 import numpy as np
+import pandas as pd
 from pathlib import Path
 import sys
 import os
@@ -64,6 +65,50 @@ else:
 OUTPUT_DIR = Path("/Users/shivpat/seed-fund-tracking/FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/visualizations/static_breakdown")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
+# Data file path
+DATA_FILE = Path("/Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx")
+
+def load_institution_data():
+    """Load and standardize institution funding data from consolidated Excel file"""
+    df = pd.read_excel(DATA_FILE, sheet_name='Project Overview')
+
+    # Standardize institution names
+    def standardize_institution(name):
+        if pd.isna(name):
+            return "Unknown"
+        name = str(name).strip()
+
+        # UIUC standardization - combine all variants
+        if 'urbana' in name.lower() and 'champaign' in name.lower():
+            return 'University of Illinois at Urbana-Champaign'
+
+        # SIU standardization
+        if name.lower().startswith('southern illinois university'):
+            if 'carbondale' in name.lower():
+                return 'Southern Illinois University at Carbondale'
+            return 'Southern Illinois University'
+
+        # Generic "University of Illinois" - keep separate for now but flag
+        if name == 'University of Illinois':
+            return 'University of Illinois (campus unclear)'
+
+        # UIC standardization
+        if 'university of illinois chicago' in name.lower() or name == 'UIC':
+            return 'University of Illinois Chicago'
+
+        return name
+
+    df['Institution_Standardized'] = df['Academic Institution of PI'].apply(standardize_institution)
+
+    # Calculate total funding per institution
+    inst_funding = df.groupby('Institution_Standardized')['Award Amount Allocated ($) this must be filled in for all lines'].sum()
+    inst_funding = inst_funding.sort_values(ascending=False).head(10)
+
+    # Convert to millions
+    inst_funding_millions = {k: v/1e6 for k, v in inst_funding.items()}
+
+    return inst_funding_millions
+
 # Data: Corrected project counts
 DATA = {
     '10yr': {
@@ -116,19 +161,8 @@ PROJECTS_BY_YEAR = {
     2024: 9
 }
 
-# Top institutions by funding
-TOP_INSTITUTIONS = {
-    'University of Illinois': 2.8,
-    'Purdue University': 1.2,
-    'Iowa State University': 0.9,
-    'University of Wisconsin': 0.8,
-    'Michigan State University': 0.7,
-    'Ohio State University': 0.6,
-    'University of Minnesota': 0.5,
-    'Indiana University': 0.4,
-    'Northwestern University': 0.3,
-    'University of Michigan': 0.3
-}
+# Top institutions by funding - will be loaded from real data
+TOP_INSTITUTIONS = None  # Loaded dynamically in main()
 
 def save_figure(fig, filename, dpi=300):
     """Save figure with metadata"""
@@ -590,10 +624,21 @@ def create_investment_by_institution():
 
 def main():
     """Generate all visualizations"""
+    global TOP_INSTITUTIONS
+
     print("=" * 60)
     print("IWRC Seed Fund Static Visualizations Generator")
     print("Generating high-quality PNG files at 300 DPI")
     print("=" * 60)
+    print()
+
+    # Load real institution data from consolidated Excel file
+    print("Loading institution data from consolidated Excel file...")
+    TOP_INSTITUTIONS = load_institution_data()
+    print(f"Loaded {len(TOP_INSTITUTIONS)} institutions")
+    print("\nTop 10 Institutions (standardized):")
+    for inst, amount in TOP_INSTITUTIONS.items():
+        print(f"  {inst}: ${amount:.2f}M")
     print()
 
     visualizations = [

@@ -58,7 +58,7 @@ from award_type_filters import (
 DATA_FILE = '/Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx'
 
 # Base output directory
-BASE_OUTPUT_DIR = '/Users/shivpat/seed-fund-tracking/visualizations'
+BASE_OUTPUT_DIR = '/Users/shivpat/seed-fund-tracking/FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/visualizations'
 
 # Period definitions
 PERIODS = {
@@ -135,7 +135,7 @@ class ProjectTypeVisualizer:
                     pass
             return None
 
-        df['year'] = df['Project ID'].apply(extract_year)
+        df['year'] = df['Project ID '].apply(extract_year)
 
         # Normalize column names for award type
         if 'Award Type' in df.columns:
@@ -204,7 +204,7 @@ class ProjectTypeVisualizer:
 
                 # Get filtered data
                 df_filtered = self.get_filtered_data(period_key, track_key)
-                num_projects = len(df_filtered['Project ID'].dropna().unique())
+                num_projects = len(df_filtered['Project ID '].dropna().unique())
                 print(f"  Data: {len(df_filtered)} rows, {num_projects} unique projects")
 
                 # For now, create a simple summary visualization
@@ -220,7 +220,7 @@ class ProjectTypeVisualizer:
                                           'summary', 'png')
 
         # Calculate metrics
-        num_projects = len(df['Project ID'].dropna().unique())
+        num_projects = len(df['Project ID '].dropna().unique())
 
         award_col = 'Award Amount Allocated ($)'
         if award_col in df.columns:

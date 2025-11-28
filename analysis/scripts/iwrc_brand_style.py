@@ -72,6 +72,25 @@ LOGO_PNG_PATH = '/Users/shivpat/seed-fund-tracking/IWRC_Logo.png'
 def configure_matplotlib_iwrc():
     """Configure matplotlib to use IWRC fonts and styling."""
     try:
+        # Register local fonts from assets directory to ensure correct weights are used
+        import matplotlib.font_manager as fm
+        
+        # Define project root (assuming script is in analysis/scripts)
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        project_root = os.path.dirname(os.path.dirname(current_dir))
+        font_dir = os.path.join(project_root, 'assets/branding/fonts')
+        
+        if os.path.exists(font_dir):
+            for font_file in ['Montserrat-Regular.ttf', 'Montserrat-Bold.ttf']:
+                font_path = os.path.join(font_dir, font_file)
+                if os.path.exists(font_path):
+                    fm.fontManager.addfont(font_path)
+                    print(f"✓ Registered font: {font_file}")
+                else:
+                    print(f"⚠ Font file not found: {font_path}")
+        else:
+            print(f"⚠ Font directory not found: {font_dir}")
+            
         plt.rcParams['font.family'] = 'Montserrat'
         plt.rcParams['font.sans-serif'] = ['Montserrat', 'DejaVu Sans']
     except Exception as e:
@@ -80,7 +99,8 @@ def configure_matplotlib_iwrc():
         plt.rcParams['font.family'] = 'sans-serif'
 
     # Title and label weights
-    plt.rcParams['font.weight'] = 'light'
+    # Changed from 'light' to 'regular' to improve readability (prevent "fading" look)
+    plt.rcParams['font.weight'] = 'regular'
     plt.rcParams['axes.titleweight'] = 'semibold'
     plt.rcParams['figure.titleweight'] = 'semibold'
 

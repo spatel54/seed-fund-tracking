@@ -22,9 +22,9 @@ from iwrc_brand_style import (
 )
 
 # Configuration
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 DATA_FILE = PROJECT_ROOT / 'data/consolidated/IWRC Seed Fund Tracking.xlsx'
-OUTPUT_DIR = PROJECT_ROOT / 'visualizations/static_breakdown'
+OUTPUT_DIR = PROJECT_ROOT / 'FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/visualizations/static_breakdown'
 
 # Ensure output directory exists
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

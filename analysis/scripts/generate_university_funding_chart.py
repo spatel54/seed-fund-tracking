@@ -7,7 +7,8 @@ warnings.filterwarnings('ignore')
 
 # Set up paths
 # Set up paths
-project_root = Path(__file__).parent.parent
+# Set up paths
+project_root = Path(__file__).parent.parent.parent
 data_file = project_root / "data/consolidated/fact sheet data.xlsx"
 output_dir = project_root / "FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/visualizations/static"
 output_dir.mkdir(parents=True, exist_ok=True)
