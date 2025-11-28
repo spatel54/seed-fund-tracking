@@ -91,6 +91,22 @@ def load_and_prepare_data():
 
     df = df.rename(columns=col_map)
 
+    # Standardize institution names (consolidate UIUC and SIU variations)
+    institution_name_map = {
+        # University of Illinois variations → canonical name
+        'University of Illinois Urbana-Champaign': 'University of Illinois at Urbana-Champaign',
+        'University of Illinois': 'University of Illinois at Urbana-Champaign',
+        'University of Illinois  ': 'University of Illinois at Urbana-Champaign',
+        'Univeristy of Illinois': 'University of Illinois at Urbana-Champaign',
+        # Southern Illinois University variations → canonical name
+        'Southern Illinois University at Carbondale': 'Southern Illinois University',
+        'Southern Illinois University Carbondale': 'Southern Illinois University',
+    }
+    # Strip whitespace and apply mapping
+    df['institution'] = df['institution'].str.strip()
+    df['institution'] = df['institution'].replace(institution_name_map)
+    print(f"✓ Standardized institution names")
+
     # Extract year
     df['project_year'] = df['project_id'].apply(extract_year_from_project_id)
     print(f"✓ Extracted years for {df['project_year'].notna().sum()} rows")

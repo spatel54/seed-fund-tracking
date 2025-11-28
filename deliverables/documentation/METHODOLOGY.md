@@ -24,7 +24,29 @@ Projects are categorized based on the `Award Type` column:
 *   **Coordination**: Administrative and coordination funding.
 *   **Other**: Any other funding types.
 
-### 3.3. Metric Calculations
+### 3.3. Institution Name Standardization
+To ensure accurate reporting, institution names are standardized to consolidate spelling variations:
+
+#### Standardization Mappings
+*   **University of Illinois** variations → `University of Illinois at Urbana-Champaign`:
+    *   `University of Illinois Urbana-Champaign`
+    *   `University of Illinois`
+    *   `University of Illinois  ` (with trailing space)
+    *   `Univeristy of Illinois` (typo)
+*   **Southern Illinois University** variations → `Southern Illinois University`:
+    *   `Southern Illinois University at Carbondale`
+    *   `Southern Illinois University Carbondale`
+
+#### Implementation
+*   **Location**: Applied in `iwrc_data_loader.py` (centralized data loader) and `generate_overview_charts.py` (visualization script)
+*   **Process**: 
+    1. Strip leading/trailing whitespace from all institution names
+    2. Apply name mapping to consolidate variations
+*   **Impact**: Reduces unique institution count (2015-2024) from 16 to 11, with:
+    *   University of Illinois at Urbana-Champaign: 49 projects (consolidated from 27+17+12)
+    *   Southern Illinois University: 7 projects (consolidated from 7+2)
+
+### 3.4. Metric Calculations
 *   **Total Investment**: Sum of `Award Amount Allocated ($)` for all filtered projects.
 *   **Number of Projects**: Count of unique `Project ID`s.
 *   **Students Supported**: Sum of values in student columns:

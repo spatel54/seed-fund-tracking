@@ -5,9 +5,14 @@ IWRC Data Loader - Centralized Data Loading with Built-in Deduplication
 This module provides a single source of truth for loading IWRC Seed Fund data
 with automatic deduplication to prevent double-counting errors.
 
+Features:
+- Automatic deduplication by project_id
+- Institution name standardization (fixes spelling variations)
+- Built-in metric calculations
+
 Author: IWRC Data Quality Team
 Date: November 27, 2025
-Version: 1.0
+Version: 1.1
 """
 
 import pandas as pd
@@ -17,6 +22,22 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple
 import warnings
 
+# Institution name standardization mapping
+# Maps all variations to canonical names
+INSTITUTION_NAME_MAP = {
+    # University of Illinois variations → canonical name
+    'University of Illinois Urbana-Champaign': 'University of Illinois at Urbana-Champaign',
+    'University of Illinois': 'University of Illinois at Urbana-Champaign',
+    'University of Illinois  ': 'University of Illinois at Urbana-Champaign',  # extra space
+    'Univeristy of Illinois': 'University of Illinois at Urbana-Champaign',  # typo
+    # University of Illinois at Urbana-Champaign maps to itself (canonical)
+    
+    # Southern Illinois University variations → canonical name
+    'Southern Illinois University at Carbondale': 'Southern Illinois University',
+    'Southern Illinois University Carbondale': 'Southern Illinois University',
+    # Southern Illinois University maps to itself (canonical)
+}
+
 
 class IWRCDataLoader:
     """
@@ -24,6 +45,7 @@ class IWRCDataLoader:
 
     Features:
     - Automatic deduplication by project_id
+    - Institution name standardization (fixes spelling variations)
     - Handles column name variations (trailing spaces)
     - Built-in metric calculations with proper deduplication
     - Support for both master dataset and fact sheet data
@@ -104,6 +126,9 @@ class IWRCDataLoader:
         student_cols = ['phd_students', 'ms_students', 'undergrad_students', 'postdoc_students']
         for col in student_cols:
             df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+
+        # Standardize institution names
+        df = self._standardize_institution_names(df)
 
         if deduplicate:
             print(f"✓ Loaded {len(df)} rows from master file")
@@ -271,6 +296,35 @@ class IWRCDataLoader:
         df_deduped = df.groupby('project_id').first().reset_index()
 
         return df_deduped
+
+    def _standardize_institution_names(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Standardize institution names to fix spelling variations.
+
+        Applies the INSTITUTION_NAME_MAP to convert all variations to
+        canonical institution names.
+
+        Args:
+            df: DataFrame with 'institution' column
+
+        Returns:
+            DataFrame with standardized institution names
+        """
+        if 'institution' not in df.columns:
+            return df
+
+        # First, strip whitespace from all institution names
+        df['institution'] = df['institution'].str.strip()
+
+        # Apply mapping
+        original_unique = df['institution'].nunique()
+        df['institution'] = df['institution'].replace(INSTITUTION_NAME_MAP)
+        standardized_unique = df['institution'].nunique()
+
+        if original_unique != standardized_unique:
+            print(f"✓ Standardized institution names: {original_unique} → {standardized_unique} unique institutions")
+
+        return df
 
     def _extract_year(self, project_id) -> Optional[int]:
         """
