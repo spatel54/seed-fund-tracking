@@ -1,0 +1,46 @@
+Cleaning Report
+===============
+
+Input File: /Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx
+Output File: /Users/shivpat/seed-fund-tracking/data/processed/clean_iwrc_tracking.xlsx
+Final Row Count: 122
+Unique Project IDs: 122
+
+Columns and Data Types:
+Project ID : object
+Award Type: object
+Project Title: object
+Project PI: object
+PI Email: object
+Academic Institution of PI: object
+Departmental Affliliation of PI: object
+Award Amount Allocated ($) this must be filled in for all lines: float64
+Number of PhD Students Supported by WRRA $: float64
+Number of MS Students Supported by WRRA $: float64
+Number of Undergraduate Students Supported by WRRA $: float64
+Number of Post Docs Supported by WRRA $: float64
+Number of students supported by non-federal (matching) funds : object
+ Diversity, Equity, Inclusion, Accessibility, and Justice
+(If the Institute collects information on number of students served, please include it.  If the Institute does not collect that information, please respond "NA", not available.  If these data are collected, but are unknown for this project, please respond "ND", not determined.): object
+WRRI Science Priority that Best Aligns with this Project: object
+Keyword (Primary): object
+Keyword (Secondary, if applicable): object
+Keyword (Tertiary, if applicable): object
+Project Summaries: object
+Product Type   (Journal article, report, dataset, with Digital Object Identifier)              : object
+Product Citation
+ (Indicate Digital Object Identifier and publication year in appropriate adjoining columns. If none available, go to "Other Products" Tab,  and list product type and stage of completion. Provide further details about the doi product in the Additional Comments column. This list may include citations for projects from this 5-year period and one previous year, so long as the citation was not already included in previous year's report): object
+Digital Object Identifier (DOI) or other identifier or web page : object
+Year of Publication : object
+How many USGS staff were co-authors of this product?: float64
+How many students were co-authors of this product?: float64
+Award, Achievement, or Grant
+ (This may include awards and achievements for projects from the previous year to this 5-year cycle, so long as they were not already included in last year's report): object
+Source? Identify the Organization: object
+Description of Award, Achievement, or Grant
+ (This may include awards and achievements for projects from the previous year to this 5-year cycle, so long as they were not already included in last year's report): object
+Award Recipient(s), Name: object
+Date (Mo/Year): object
+Who was the recipient? : object
+Monetary Benefit of Award or Achievement (if applicable; use NA if not applicable): object
+Additional Comments: object

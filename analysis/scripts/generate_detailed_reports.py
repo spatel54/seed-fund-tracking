@@ -45,8 +45,8 @@ except ImportError as e:
 # CONFIGURATION
 # ============================================================================
 
-OUTPUT_DIR = Path('/Users/shivpat/seed-fund-tracking/FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/reports')
-DATA_FILE = Path('/Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx')
+OUTPUT_DIR = Path('/Users/shivpat/seed-fund-tracking/deliverables_final/reports/detailed')
+DATA_FILE = Path('/Users/shivpat/seed-fund-tracking/data/processed/clean_iwrc_tracking.xlsx')
 
 # Use IWRC brand colors
 COLORS = {
@@ -418,9 +418,9 @@ def generate_detailed_analysis_report(df_10yr, df_5yr, metrics_10yr, metrics_5yr
 
         # Page 4: Static Visualizations (Topic Areas) - High Quality
         try:
-            static_viz_dir = Path('/Users/shivpat/seed-fund-tracking/FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/visualizations/static')
-            topic_areas_img1 = static_viz_dir / 'topic_areas_new_1.png'
-            topic_areas_img2 = static_viz_dir / 'topic_areas_new_2.png'
+            static_viz_dir = Path('/Users/shivpat/seed-fund-tracking/deliverables_final/visualizations/static/topics')
+            topic_areas_img1 = static_viz_dir / 'topic_areas_funding.png'
+            topic_areas_img2 = static_viz_dir / 'topic_areas_pyramid_stacked.png'
 
             if topic_areas_img1.exists() and topic_areas_img2.exists():
                 fig = plt.figure(figsize=(8.5, 11), dpi=300)  # Higher DPI for quality

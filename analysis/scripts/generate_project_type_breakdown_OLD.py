@@ -43,8 +43,8 @@ from award_type_filters import (
 
 # Configuration
 PROJECT_ROOT = '/Users/shivpat/seed-fund-tracking'
-DATA_FILE = os.path.join(PROJECT_ROOT, 'data/consolidated/IWRC Seed Fund Tracking.xlsx')
-OUTPUT_DIR = Path(PROJECT_ROOT) / 'FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2'
+DATA_FILE = Path(PROJECT_ROOT) / 'data/processed/clean_iwrc_tracking.xlsx'
+OUTPUT_DIR = Path(PROJECT_ROOT) / 'deliverables_final/reports/detailed'
 
 # Configure matplotlib for IWRC branding
 configure_matplotlib_iwrc()

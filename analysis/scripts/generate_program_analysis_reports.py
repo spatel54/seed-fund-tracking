@@ -40,7 +40,7 @@ configure_matplotlib_iwrc()
 
 # Configuration
 BASE_DIR = Path("/Users/shivpat/seed-fund-tracking")
-OUTPUT_DIR = BASE_DIR / "FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/reports/fresh"
+OUTPUT_DIR = BASE_DIR / "deliverables_final/reports"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Font family constant

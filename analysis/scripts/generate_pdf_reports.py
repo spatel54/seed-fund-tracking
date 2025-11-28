@@ -29,7 +29,7 @@ sys.path.insert(0, '/Users/shivpat/seed-fund-tracking/scripts')
 
 # Import IWRC branding and award type filters
 try:
-    from iwrc_brand_style import IWRC_COLORS, configure_matplotlib_iwrc
+    from iwrc_brand_style import IWRC_COLORS, IWRC_PALETTE, configure_matplotlib_iwrc
     from award_type_filters import filter_all_projects, filter_104b_only, get_award_type_label, get_award_type_short_label
     USE_IWRC_BRANDING = True
     print("✓ Imported IWRC branding modules")
@@ -53,7 +53,7 @@ if USE_IWRC_BRANDING:
 # ============================================================================
 
 OUTPUT_DIR = Path('/Users/shivpat/seed-fund-tracking/FINAL_DELIVERABLES/pdfs')
-DATA_FILE = Path('/Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx')
+DATA_FILE = Path('/Users/shivpat/seed-fund-tracking/data/processed/clean_iwrc_tracking.xlsx')
 
 # Use IWRC colors or fallback
 COLORS = IWRC_COLORS if USE_IWRC_BRANDING else {
@@ -224,11 +224,11 @@ def calculate_metrics(df):
 # PDF GENERATION: 1. ROI Analysis Report
 # ============================================================================
 
-def generate_roi_analysis_pdf(df_10yr, df_5yr, metrics_10yr, metrics_5yr):
+def generate_roi_analysis_pdf(df_10yr, df_5yr, metrics_10yr, metrics_5yr, output_dir=OUTPUT_DIR):
     """Generate comprehensive ROI Analysis Report PDF."""
     print("\nGenerating IWRC_ROI_Analysis_Report.pdf...")
 
-    pdf_path = OUTPUT_DIR / 'IWRC_ROI_Analysis_Report.pdf'
+    pdf_path = output_dir / 'IWRC_ROI_Analysis_Report.pdf'
 
     with PdfPages(pdf_path) as pdf:
         # Page 1: Title Page
@@ -257,7 +257,7 @@ def generate_roi_analysis_pdf(df_10yr, df_5yr, metrics_10yr, metrics_5yr):
         • Institutions Served: {metrics_10yr['institutions']}
         """
         ax.text(0.5, 0.20, findings_text, ha='center', fontsize=11, transform=ax.transAxes,
-                family='monospace', bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.3))
+                bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.3))
 
         ax.text(0.5, 0.02, 'Corrected Data Analysis (November 24, 2025)',
                 ha='center', fontsize=9, style='italic', color='gray', transform=ax.transAxes)
@@ -426,11 +426,11 @@ def generate_roi_analysis_pdf(df_10yr, df_5yr, metrics_10yr, metrics_5yr):
 # PDF GENERATION: 2. Seed Fund Tracking Analysis
 # ============================================================================
 
-def generate_seed_fund_analysis_pdf(df_10yr, df_5yr, metrics_10yr, metrics_5yr):
+def generate_seed_fund_analysis_pdf(df_10yr, df_5yr, metrics_10yr, metrics_5yr, output_dir=OUTPUT_DIR):
     """Generate comprehensive Seed Fund Tracking Analysis PDF."""
     print("\nGenerating Seed_Fund_Tracking_Analysis.pdf...")
 
-    pdf_path = OUTPUT_DIR / 'Seed_Fund_Tracking_Analysis.pdf'
+    pdf_path = output_dir / 'Seed_Fund_Tracking_Analysis.pdf'
 
     with PdfPages(pdf_path) as pdf:
         # Page 1: Title and Overview
@@ -458,7 +458,7 @@ The data includes student training, institutional reach, and follow-on funding s
 through the leverage of IWRC seed funding.
         """
         ax.text(0.5, 0.45, overview_text, ha='center', va='center', fontsize=10, transform=ax.transAxes,
-                family='monospace', bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.5))
+                bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.5))
 
         ax.text(0.5, 0.08, f"Report Generated: {datetime.now().strftime('%B %d, %Y')}",
                 ha='center', fontsize=9, style='italic', color='gray', transform=ax.transAxes)
@@ -525,7 +525,7 @@ through the leverage of IWRC seed funding.
   Avg per Project: ${avg_5yr:,.0f}"""
 
         ax4.text(0.5, 0.5, stats_text, ha='center', va='center', fontsize=9, transform=ax4.transAxes,
-                family='monospace', bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.3))
+                bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.3))
         ax4.axis('off')
 
         pdf.savefig(fig, bbox_inches='tight')
@@ -585,7 +585,7 @@ Geographic Coverage:
   All regions of Illinois"""
 
         ax3.text(0.5, 0.5, institutions_text, ha='center', va='center', fontsize=9, transform=ax3.transAxes,
-                family='monospace', bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.2))
+                bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.2))
         ax3.axis('off')
 
         pdf.savefig(fig, bbox_inches='tight')
@@ -625,7 +625,7 @@ KEY INSIGHTS:
         """
 
         ax.text(0.05, 0.95, roi_summary_text, ha='left', va='top', fontsize=9, transform=ax.transAxes,
-               family='monospace', bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.4))
+               bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.4))
 
         ax.text(0.5, 0.02, 'Data reflects unique projects only (November 24, 2025 correction)',
                 ha='center', fontsize=8, style='italic', color='gray', transform=ax.transAxes)
@@ -639,11 +639,11 @@ KEY INSIGHTS:
 # PDF GENERATION: 3. Illinois Institutions Map
 # ============================================================================
 
-def generate_institutions_map_pdf(df_10yr):
+def generate_institutions_map_pdf(df_10yr, output_dir=OUTPUT_DIR):
     """Generate Illinois institutions geographic distribution map PDF."""
     print("\nGenerating 2025_illinois_institutions_map.pdf...")
 
-    pdf_path = OUTPUT_DIR / '2025_illinois_institutions_map.pdf'
+    pdf_path = output_dir / '2025_illinois_institutions_map.pdf'
 
     # Prepare institution data
     institution_data = df_10yr.groupby(['institution', 'city']).size().reset_index(name='project_count') if 'city' in df_10yr.columns else df_10yr.groupby(['institution']).size().reset_index(name='project_count')
@@ -681,11 +681,11 @@ def generate_institutions_map_pdf(df_10yr):
 # PDF GENERATION: 4. Keyword Pie Chart
 # ============================================================================
 
-def generate_keyword_pie_pdf(df_10yr):
+def generate_keyword_pie_pdf(df_10yr, output_dir=OUTPUT_DIR):
     """Generate research keywords distribution pie chart PDF."""
     print("\nGenerating 2025_keyword_pie_chart_interactive.pdf...")
 
-    pdf_path = OUTPUT_DIR / '2025_keyword_pie_chart.pdf'
+    pdf_path = output_dir / '2025_keyword_pie_chart.pdf'
 
     # Extract keywords
     keywords = []
@@ -705,7 +705,9 @@ def generate_keyword_pie_pdf(df_10yr):
                 fontsize=14, fontweight='bold')
 
     # Pie chart
-    colors_pie = plt.cm.Set3(np.linspace(0, 1, len(top_keywords)))
+    # Pie chart
+    # Use IWRC palette, cycling if necessary for >8 slices
+    colors_pie = (IWRC_PALETTE * 2)[:len(top_keywords)]
     wedges, texts, autotexts = ax1.pie(top_keywords.values(), labels=top_keywords.keys(),
                                         autopct='%1.1f%%', colors=colors_pie, startangle=90)
     for autotext in autotexts:
@@ -824,13 +826,19 @@ if __name__ == '__main__':
 
     # Note: PDF functions would need to be called with output directory parameter
     # For now, just note what would be generated
-    print("  (PDF generation functions would be called here for all_projects track)")
+    generate_roi_analysis_pdf(df_all_10yr, df_all_5yr, metrics_all_10yr, metrics_all_5yr, output_dir=output_dirs['all'])
+    generate_seed_fund_analysis_pdf(df_all_10yr, df_all_5yr, metrics_all_10yr, metrics_all_5yr, output_dir=output_dirs['all'])
+    generate_institutions_map_pdf(df_all_10yr, output_dir=output_dirs['all'])
+    generate_keyword_pie_pdf(df_all_10yr, output_dir=output_dirs['all'])
 
     # Generate PDFs for 104B only
     print("\n" + "="*80)
     print("GENERATING PDFs: 104B Only")
     print("="*80)
-    print("  (PDF generation functions would be called here for 104b_only track)")
+    generate_roi_analysis_pdf(df_104b_10yr, df_104b_5yr, metrics_104b_10yr, metrics_104b_5yr, output_dir=output_dirs['104b'])
+    generate_seed_fund_analysis_pdf(df_104b_10yr, df_104b_5yr, metrics_104b_10yr, metrics_104b_5yr, output_dir=output_dirs['104b'])
+    generate_institutions_map_pdf(df_104b_10yr, output_dir=output_dirs['104b'])
+    generate_keyword_pie_pdf(df_104b_10yr, output_dir=output_dirs['104b'])
 
     print("\n" + "█" * 80)
     print("█" + " PDF GENERATION READY".center(78) + "█")

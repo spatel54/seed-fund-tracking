@@ -62,76 +62,55 @@ else:
     }
 
 # Data Constants (Corrected)
-CORRECTED_DATA = {
-    'all': {
-        '10_year': {
-            'period': '2015-2024',
-            'projects': 77,
-            'investment': 8500000,
-            'students': 304,
-            'roi': 0.03
-        },
-        '5_year': {
-            'period': '2020-2024',
-            'projects': 47,
-            'investment': 7300000,
-            'students': 186,
-            'roi': 0.04
-        }
-    },
-    '104b': {
-        '10_year': {
-            'period': '2015-2024',
-            'projects': 60,
-            'investment': 1700000,
-            'students': 202,
-            'roi': 0.03
-        },
-        '5_year': {
-            'period': '2020-2024',
-            'projects': 33,
-            'investment': 1075000,
-            'students': 100,
-            'roi': 0.04
-        }
-    }
-}
+# Data Constants (Dynamic)
+# CORRECTED_DATA removed - calculated dynamically from loader
 
 def load_data():
-    """Load and process the Excel data with proper column normalization"""
-    excel_path = '/Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx'
-
-    # Read all sheets
-    xl_file = pd.ExcelFile(excel_path)
-
-    # Load main data - try different sheet names
+    # Use IWRCDataLoader to load and standardize data
     try:
-        df = pd.read_excel(excel_path, sheet_name='Projects')
-    except:
+        from iwrc_data_loader import IWRCDataLoader
+        loader = IWRCDataLoader()
+        # Load without deduplication first to allow custom filtering
+        df = loader.load_master_data(deduplicate=False)
+        print("✓ Loaded data using IWRCDataLoader")
+    except ImportError:
+        print("Warning: Could not import IWRCDataLoader. Using manual loading.")
+        # Fallback to manual loading (existing code)
+        excel_path = '/Users/shivpat/seed-fund-tracking/data/processed/clean_iwrc_tracking.xlsx'
+        xl_file = pd.ExcelFile(excel_path)
         try:
-            df = pd.read_excel(excel_path, sheet_name='Project Overview')
+            df = pd.read_excel(excel_path, sheet_name='Projects')
         except:
-            # Use first sheet
-            df = pd.read_excel(excel_path, sheet_name=0)
-
-    # Normalize column names for award type filtering
-    col_map = {
-        'Project ID ': 'project_id',
-        'Award Type': 'award_type',
-        'Project Title': 'project_title',
-        'Project PI': 'pi_name',
-        'Academic Institution of PI': 'institution',
-        'Award Amount Allocated ($) this must be filled in for all lines': 'award_amount',
-        'Number of PhD Students Supported by WRRA $': 'phd_students',
-        'Number of MS Students Supported by WRRA $': 'ms_students',
-        'Number of Undergraduate Students Supported by WRRA $': 'undergrad_students',
-        'Number of Post Docs Supported by WRRA $': 'postdoc_students',
-    }
-
-    # Rename columns if they exist in the dataframe
-    available_cols = {k: v for k, v in col_map.items() if k in df.columns}
-    if available_cols:
-        df = df.rename(columns=available_cols)
+            try:
+                df = pd.read_excel(excel_path, sheet_name='Project Overview')
+            except:
+                df = pd.read_excel(excel_path, sheet_name=0)
+        
+        # Normalize column names
+        col_map = {
+            'Project ID ': 'project_id',
+            'Award Type': 'award_type',
+            'Project Title': 'project_title',
+            'Project PI': 'pi_name',
+            'Academic Institution of PI': 'institution',
+            'Award Amount Allocated ($) this must be filled in for all lines': 'award_amount',
+            'Number of PhD Students Supported by WRRA $': 'phd_students',
+            'Number of MS Students Supported by WRRA $': 'ms_students',
+            'Number of Undergraduate Students Supported by WRRA $': 'undergrad_students',
+            'Number of Post Docs Supported by WRRA $': 'postdoc_students',
+        }
+        available_cols = {k: v for k, v in col_map.items() if k in df.columns}
+        if available_cols:
+            df = df.rename(columns=available_cols)
+            
+        # Ensure project_year exists
+        if 'project_year' not in df.columns and 'project_id' in df.columns:
+             def extract_year(pid):
+                 import re
+                 if pd.isna(pid): return None
+                 m = re.search(r'(20\d{2})', str(pid))
+                 return int(m.group(1)) if m else None
+             df['project_year'] = df['project_id'].apply(extract_year)
 
     # Load institution coordinates if available
     try:
@@ -157,60 +136,92 @@ def load_data():
 
     return df, coords_df
 
-def create_roi_dashboard(df, output_path):
+def create_roi_dashboard(df, output_path, CORRECTED_DATA, award_type_key='all', period_key='10_year'):
     """Create main ROI analysis dashboard"""
     print("Creating ROI Analysis Dashboard...")
 
-    # Create subplots
+    # Get metrics for the selected award type and period
+    metrics = CORRECTED_DATA.get(award_type_key, {}).get(period_key, {})
+    m10 = CORRECTED_DATA.get(award_type_key, {}).get('10_year', {})
+    m5 = CORRECTED_DATA.get(award_type_key, {}).get('5_year', {})
+
+    # Create figure with 5 rows (2 for indicators, 3 for charts)
     fig = make_subplots(
-        rows=3, cols=2,
-        subplot_titles=(
-            'Investment by Year',
-            'Projects by Year',
-            'Students Supported by Year',
-            'ROI Trend Over Time',
-            'Investment by Institution (Top 10)',
-            'Project Distribution by Institution'
-        ),
+        rows=5, cols=2,
         specs=[
-            [{'type': 'scatter'}, {'type': 'bar'}],
-            [{'type': 'scatter'}, {'type': 'scatter'}],
-            [{'type': 'bar'}, {'type': 'pie'}]
+            [{"type": "indicator"}, {"type": "indicator"}],
+            [{"type": "indicator"}, {"type": "indicator"}],
+            [{"type": "scatter"}, {"type": "bar"}],
+            [{"type": "scatter"}, {"type": "scatter"}],
+            [{"type": "bar"}, {"type": "domain"}]
         ],
-        vertical_spacing=0.12,
-        horizontal_spacing=0.12
+        vertical_spacing=0.08,
+        subplot_titles=(
+            None, None, None, None,
+            'Investment by Year', 'Projects by Year',
+            'Students Supported by Year', 'ROI Trend Over Time',
+            'Investment by Institution (Top 10)', 'Project Distribution by Institution'
+        )
     )
 
+    # Add indicators using DYNAMIC metrics
+    # Row 1, Col 1: Total Investment
+    fig.add_trace(go.Indicator(
+        mode="number+delta",
+        value=m10.get('investment', 0),
+        title={"text": "Total Investment (10-Year)"},
+        number={'prefix': "$", 'valueformat': ",.0f"},
+        delta={'reference': m5.get('investment', 0), 'relative': False, 'valueformat': ",.0f"},
+    ), row=1, col=1)
+
+    # Row 1, Col 2: Students Trained
+    fig.add_trace(go.Indicator(
+        mode="number+delta",
+        value=m10.get('students', 0),
+        title={"text": "Students Trained"},
+        delta={'reference': m5.get('students', 0), 'relative': False},
+    ), row=1, col=2)
+
+    # Row 2, Col 1: ROI Multiplier
+    fig.add_trace(go.Indicator(
+        mode="number+delta",
+        value=m10.get('roi', 0) * 100,
+        title={"text": "ROI Multiplier (%)"},
+        number={'suffix': "%", 'valueformat': ".1f"},
+        delta={'reference': m5.get('roi', 0) * 100, 'relative': False},
+    ), row=2, col=1)
+
+    # Row 2, Col 2: Total Projects
+    fig.add_trace(go.Indicator(
+        mode="number",
+        value=m10.get('projects', 0),
+        title={"text": "Total Projects"},
+    ), row=2, col=2)
+
     # Prepare yearly data
-    if 'Year' in df.columns:
-        yearly_data = df.groupby('Year').agg({
-            'Award Amount': 'sum',
-            'Project Title': 'count',
-            'Number of Students': 'sum'
-        }).reset_index()
-        yearly_data.columns = ['Year', 'Investment', 'Projects', 'Students']
-
-        # Calculate ROI by year (if revenue data available)
-        if 'Revenue' in df.columns:
-            yearly_data['ROI'] = yearly_data.apply(
-                lambda x: df[df['Year'] == x['Year']]['Revenue'].sum() / x['Investment']
-                if x['Investment'] > 0 else 0, axis=1
-            )
-        else:
-            # Use average ROI
-            yearly_data['ROI'] = [0.03] * len(yearly_data)
+    # Calculate total students per row if not exists
+    student_cols = ['phd_students', 'ms_students', 'undergrad_students', 'postdoc_students']
+    available_student_cols = [c for c in student_cols if c in df.columns]
+    if available_student_cols:
+        df['total_students'] = df[available_student_cols].sum(axis=1)
     else:
-        # Create synthetic data based on corrected totals
-        years = list(range(2015, 2025))
-        yearly_data = pd.DataFrame({
-            'Year': years,
-            'Investment': [850000] * 10,  # Distributed evenly
-            'Projects': [7, 8, 7, 8, 9, 8, 7, 8, 7, 8],  # Total 77
-            'Students': [30, 31, 30, 31, 30, 31, 30, 31, 30, 30],  # Total 304
-            'ROI': [0.025, 0.028, 0.030, 0.032, 0.035, 0.032, 0.030, 0.028, 0.030, 0.032]
-        })
+        df['total_students'] = 0
 
-    # 1. Investment by Year
+    if 'project_year' in df.columns:
+        yearly_data = df.groupby('project_year').agg(
+            Investment=('award_amount', 'sum'),
+            Projects=('project_title', 'count'),
+            Students=('total_students', 'sum')
+        ).reset_index()
+        yearly_data.columns = ['Year', 'Investment', 'Projects', 'Students']
+        
+        # ROI Trend (mock or calculated)
+        yearly_data['ROI'] = 0.03 # Placeholder as we don't have yearly revenue data
+    else:
+        # Fallback
+        yearly_data = pd.DataFrame({'Year': [], 'Investment': [], 'Projects': [], 'Students': [], 'ROI': []})
+
+    # 1. Investment by Year (Row 3)
     fig.add_trace(
         go.Scatter(
             x=yearly_data['Year'],
@@ -221,10 +232,10 @@ def create_roi_dashboard(df, output_path):
             marker=dict(size=8),
             hovertemplate='<b>%{x}</b><br>Investment: $%{y:,.0f}<extra></extra>'
         ),
-        row=1, col=1
+        row=3, col=1
     )
 
-    # 2. Projects by Year
+    # 2. Projects by Year (Row 3)
     fig.add_trace(
         go.Bar(
             x=yearly_data['Year'],
@@ -233,10 +244,10 @@ def create_roi_dashboard(df, output_path):
             marker_color=COLORS['secondary'],
             hovertemplate='<b>%{x}</b><br>Projects: %{y}<extra></extra>'
         ),
-        row=1, col=2
+        row=3, col=2
     )
 
-    # 3. Students by Year
+    # 3. Students by Year (Row 4)
     fig.add_trace(
         go.Scatter(
             x=yearly_data['Year'],
@@ -248,10 +259,10 @@ def create_roi_dashboard(df, output_path):
             fill='tozeroy',
             hovertemplate='<b>%{x}</b><br>Students: %{y}<extra></extra>'
         ),
-        row=2, col=1
+        row=4, col=1
     )
 
-    # 4. ROI Trend
+    # 4. ROI Trend (Row 4)
     fig.add_trace(
         go.Scatter(
             x=yearly_data['Year'],
@@ -262,23 +273,14 @@ def create_roi_dashboard(df, output_path):
             marker=dict(size=8),
             hovertemplate='<b>%{x}</b><br>ROI: %{y:.2%}<extra></extra>'
         ),
-        row=2, col=2
+        row=4, col=2
     )
 
-    # 5. Investment by Institution
-    if 'Institution' in df.columns:
-        inst_investment = df.groupby('Institution')['Award Amount'].sum().sort_values(ascending=False).head(10)
+    # 5. Investment by Institution (Row 5)
+    if 'institution' in df.columns:
+        inst_investment = df.groupby('institution')['award_amount'].sum().sort_values(ascending=False).head(10)
     else:
-        # Synthetic data
-        inst_investment = pd.Series({
-            'University of Illinois Urbana-Champaign': 3500000,
-            'Northwestern University': 2000000,
-            'Illinois Institute of Technology': 1200000,
-            'University of Chicago': 800000,
-            'Southern Illinois University': 500000,
-            'Northern Illinois University': 300000,
-            'Illinois State University': 200000
-        })
+        inst_investment = pd.Series()
 
     fig.add_trace(
         go.Bar(
@@ -289,21 +291,14 @@ def create_roi_dashboard(df, output_path):
             marker_color=COLORS['info'],
             hovertemplate='<b>%{y}</b><br>Investment: $%{x:,.0f}<extra></extra>'
         ),
-        row=3, col=1
+        row=5, col=1
     )
 
-    # 6. Project Distribution Pie
-    if 'Institution' in df.columns:
-        inst_projects = df.groupby('Institution')['Project Title'].count().head(10)
+    # 6. Project Distribution Pie (Row 5)
+    if 'institution' in df.columns:
+        inst_projects = df.groupby('institution')['project_title'].count().head(10)
     else:
-        inst_projects = pd.Series({
-            'University of Illinois Urbana-Champaign': 35,
-            'Northwestern University': 18,
-            'Illinois Institute of Technology': 12,
-            'University of Chicago': 6,
-            'Southern Illinois University': 4,
-            'Others': 2
-        })
+        inst_projects = pd.Series()
 
     fig.add_trace(
         go.Pie(
@@ -312,7 +307,7 @@ def create_roi_dashboard(df, output_path):
             name='Projects',
             hovertemplate='<b>%{label}</b><br>Projects: %{value}<br>%{percent}<extra></extra>'
         ),
-        row=3, col=2
+        row=5, col=2
     )
 
     # Update layout with IWRC styling
@@ -574,7 +569,7 @@ def create_detailed_analysis(df, output_path):
     # Update layout
     fig.update_layout(
         title={
-            'text': 'IWRC Seed Fund Detailed Analysis<br><sub>Comprehensive breakdown of funding, students, and ROI</sub>',
+            'text': 'IWRC Seed Fund Detailed Analysis<br><sub>Funding, Students, and ROI Analysis</sub>',
             'x': 0.5,
             'xanchor': 'center',
             'font': {'size': 22}
@@ -780,6 +775,63 @@ def main():
         df_104b = filter_104b_only(df)
         print(f"  ✓ All Projects filter: {len(df_all)} rows")
         print(f"  ✓ 104B Only filter: {len(df_104b)} rows")
+
+        # Calculate metrics dynamically
+        try:
+            from iwrc_data_loader import IWRCDataLoader
+            loader = IWRCDataLoader()
+
+            # Calculate metrics for All Projects
+            metrics_all_10yr = loader.calculate_metrics(df_all, period='10yr')
+            metrics_all_5yr = loader.calculate_metrics(df_all, period='5yr')
+
+            # Calculate metrics for 104B Only
+            metrics_104b_10yr = loader.calculate_metrics(df_104b, period='10yr')
+            metrics_104b_5yr = loader.calculate_metrics(df_104b, period='5yr')
+
+            CORRECTED_DATA = {
+                'all': {
+                    '10_year': {
+                        'period': '2015-2024',
+                        'projects': metrics_all_10yr['projects'],
+                        'investment': metrics_all_10yr['investment'],
+                        'students': metrics_all_10yr['students'],
+                        'roi': metrics_all_10yr['roi']
+                    },
+                    '5_year': {
+                        'period': '2020-2024',
+                        'projects': metrics_all_5yr['projects'],
+                        'investment': metrics_all_5yr['investment'],
+                        'students': metrics_all_5yr['students'],
+                        'roi': metrics_all_5yr['roi']
+                    }
+                },
+                '104b': {
+                    '10_year': {
+                        'period': '2015-2024',
+                        'projects': metrics_104b_10yr['projects'],
+                        'investment': metrics_104b_10yr['investment'],
+                        'students': metrics_104b_10yr['students'],
+                        'roi': metrics_104b_10yr['roi']
+                    },
+                    '5_year': {
+                        'period': '2020-2024',
+                        'projects': metrics_104b_5yr['projects'],
+                        'investment': metrics_104b_5yr['investment'],
+                        'students': metrics_104b_5yr['students'],
+                        'roi': metrics_104b_5yr['roi']
+                    }
+                }
+            }
+            print("✓ Calculated dynamic metrics from data loader")
+
+        except ImportError:
+            print("Warning: Could not import IWRCDataLoader. Using fallback data.")
+            # Fallback
+            CORRECTED_DATA = {
+                'all': {'10_year': {'projects': 77, 'investment': 2711544, 'students': 117, 'roi': 0.014}},
+                '104b': {'10_year': {'projects': 57, 'investment': 832464, 'students': 100, 'roi': 0.014}}
+            }
     except Exception as e:
         print(f"  ✗ Error loading data: {e}")
         df = None
@@ -788,7 +840,7 @@ def main():
         df_104b = None
 
     # Output directories - create dual track structure
-    base_output_dir = '/Users/shivpat/seed-fund-tracking/FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/visualizations/interactive'
+    base_output_dir = '/Users/shivpat/seed-fund-tracking/deliverables_final/visualizations/interactive'
     output_dirs = {
         'all': os.path.join(base_output_dir, 'all_projects'),
         '104b': os.path.join(base_output_dir, '104b_only'),
@@ -814,7 +866,8 @@ def main():
         # 1. ROI Dashboard
         file_sizes['roi_analysis_dashboard_all.html'] = create_roi_dashboard(
             df_all,
-            os.path.join(output_dirs['all'], 'roi_analysis_dashboard.html')
+            os.path.join(output_dirs['all'], 'roi_analysis_dashboard.html'),
+            CORRECTED_DATA['all']
         )
 
         # 2. Geographic Map
@@ -862,7 +915,8 @@ def main():
         # 1. ROI Dashboard
         file_sizes['roi_analysis_dashboard_104b.html'] = create_roi_dashboard(
             df_104b,
-            os.path.join(output_dirs['104b'], 'roi_analysis_dashboard.html')
+            os.path.join(output_dirs['104b'], 'roi_analysis_dashboard.html'),
+            CORRECTED_DATA['104b']
         )
 
         # 2. Geographic Map

@@ -66,7 +66,8 @@ OUTPUT_DIR = Path("/Users/shivpat/seed-fund-tracking/FINAL_DELIVERABLES_2_backup
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Data file path
-DATA_FILE = Path("/Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx")
+# Data file path
+DATA_FILE = Path("/Users/shivpat/seed-fund-tracking/data/processed/clean_iwrc_tracking.xlsx")
 
 def load_institution_data():
     """Load and standardize institution funding data from consolidated Excel file"""
@@ -545,50 +546,6 @@ def create_project_count_correction():
 
     return save_figure(fig, 'project_count_comparison.png')
 
-def create_award_breakdown():
-    """9. Awards and achievements breakdown"""
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 7), facecolor='white')
-
-    # Award types by count
-    award_types = ['Grants Received', 'Publications', 'Patents', 'Conferences', 'Other']
-    award_counts = [45, 38, 12, 28, 15]
-    colors_list = [COLORS['blue'], COLORS['orange'], COLORS['green'], COLORS['purple'], COLORS['yellow']]
-
-    bars1 = ax1.barh(award_types, award_counts, color=colors_list,
-                     edgecolor='black', linewidth=1.5)
-
-    for bar, count in zip(bars1, award_counts):
-        width = bar.get_width()
-        ax1.text(width + 1, bar.get_y() + bar.get_height()/2., f'{count}',
-                va='center', fontsize=11, fontweight='bold')
-
-    ax1.set_xlabel('Count', fontsize=12, fontweight='bold')
-    ax1.set_title('Achievements by Type (10-Year)', fontsize=14, fontweight='bold',
-                 color=COLORS['dark_blue'])
-    ax1.grid(axis='x', alpha=0.3, linestyle='--')
-    ax1.spines['top'].set_visible(False)
-    ax1.spines['right'].set_visible(False)
-
-    # Award monetary value breakdown (estimated)
-    value_labels = ['Follow-on\nGrants', 'Industry\nPartnerships', 'Other\nFunding']
-    values = [0.155, 0.070, 0.030]  # Million
-
-    wedges, texts, autotexts = ax2.pie(values, labels=value_labels, autopct='%1.1f%%',
-                                        colors=[COLORS['green'], COLORS['orange'], COLORS['blue']],
-                                        startangle=90,
-                                        wedgeprops={'edgecolor': 'black', 'linewidth': 1.5})
-    for autotext in autotexts:
-        autotext.set_color('white')
-        autotext.set_fontweight('bold')
-        autotext.set_fontsize(11)
-
-    ax2.set_title(f'Follow-on Funding by Source\n(Total: $0.255M)',
-                 fontsize=14, fontweight='bold', color=COLORS['dark_blue'])
-
-    fig.suptitle('Awards and Follow-on Funding Breakdown', fontsize=16, fontweight='bold',
-                y=0.98, color=COLORS['dark_blue'])
-
-    return save_figure(fig, 'award_breakdown.png')
 
 def create_investment_by_institution():
     """10. Top institutions by investment"""
@@ -650,7 +607,6 @@ def main():
         ("Projects by Year", create_projects_by_year),
         ("Institutional Reach", create_institutional_reach),
         ("Project Count Correction", create_project_count_correction),
-        ("Awards Breakdown", create_award_breakdown),
         ("Investment by Institution", create_investment_by_institution),
     ]
 

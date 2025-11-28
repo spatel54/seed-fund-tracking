@@ -58,7 +58,8 @@ from award_type_filters import (
 DATA_FILE = '/Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx'
 
 # Base output directory
-BASE_OUTPUT_DIR = '/Users/shivpat/seed-fund-tracking/FINAL_DELIVERABLES_2_backup_20251125_194954 copy 2/visualizations'
+# Base output directory
+BASE_OUTPUT_DIR = '/Users/shivpat/seed-fund-tracking/deliverables_final/visualizations'
 
 # Period definitions
 PERIODS = {
@@ -118,9 +119,30 @@ class ProjectTypeVisualizer:
         print(f"✓ Output directories created")
 
     def load_data(self, data_path):
-        """Load and preprocess data from Excel file."""
-        df = pd.read_excel(data_path, sheet_name='Project Overview')
+        """Load and preprocess data using IWRCDataLoader."""
+        try:
+            from iwrc_data_loader import IWRCDataLoader
+            loader = IWRCDataLoader()
+            # Load with deduplication to ensure accurate counts
+            df = loader.load_master_data(deduplicate=True)
+            
+            # Ensure year column exists (loader might name it 'project_year')
+            if 'project_year' in df.columns:
+                df['year'] = df['project_year']
+            
+            # Ensure award_type column exists
+            if 'award_type' in df.columns:
+                df['award_type'] = df['award_type']
+                
+            return df
+        except ImportError:
+            print("Warning: Could not import IWRCDataLoader. Using manual loading.")
+            return self._manual_load_data(data_path)
 
+    def _manual_load_data(self, data_path):
+        """Fallback manual loading."""
+        df = pd.read_excel(data_path, sheet_name='Project Overview')
+        # ... (existing manual loading logic)
         # Extract year from Project ID
         def extract_year(project_id):
             if pd.isna(project_id):
@@ -136,11 +158,6 @@ class ProjectTypeVisualizer:
             return None
 
         df['year'] = df['Project ID '].apply(extract_year)
-
-        # Normalize column names for award type
-        if 'Award Type' in df.columns:
-            df['award_type'] = df['Award Type']
-
         return df
 
     def _create_output_directories(self):
@@ -204,7 +221,7 @@ class ProjectTypeVisualizer:
 
                 # Get filtered data
                 df_filtered = self.get_filtered_data(period_key, track_key)
-                num_projects = len(df_filtered['Project ID '].dropna().unique())
+                num_projects = len(df_filtered['project_id'].dropna().unique()) if 'project_id' in df_filtered.columns else len(df_filtered)
                 print(f"  Data: {len(df_filtered)} rows, {num_projects} unique projects")
 
                 # For now, create a simple summary visualization
@@ -220,9 +237,9 @@ class ProjectTypeVisualizer:
                                           'summary', 'png')
 
         # Calculate metrics
-        num_projects = len(df['Project ID '].dropna().unique())
+        num_projects = len(df['project_id'].dropna().unique()) if 'project_id' in df.columns else len(df)
 
-        award_col = 'Award Amount Allocated ($)'
+        award_col = 'award_amount'
         if award_col in df.columns:
             total_investment = df[award_col].fillna(0).sum()
         else:
@@ -230,10 +247,10 @@ class ProjectTypeVisualizer:
 
         # Student columns
         student_cols = [
-            'Number of PhD Students Supported by WRRA $',
-            'Number of MS Students Supported by WRRA $',
-            'Number of Undergraduate Students Supported by WRRA $',
-            'Number of Post Docs Supported by WRRA $'
+            'phd_students',
+            'ms_students',
+            'undergrad_students',
+            'postdoc_students'
         ]
         total_students = 0
         for col in student_cols:
@@ -307,20 +324,104 @@ class ProjectTypeVisualizer:
         self.generate_all_static_pngs()
 
         # TODO: Add more visualization types
-        # TODO: Generate comparison PNGs
-        # TODO: Generate interactive HTMLs
-        # TODO: Generate comparison HTMLs
-        # TODO: Generate documentation
+        # Generate interactive HTMLs
+        self.generate_interactive_htmls()
 
-        end_time = datetime.now()
-        duration = (end_time - start_time).total_seconds()
-
+    def generate_interactive_htmls(self):
+        """Generate interactive HTML dashboards for each track."""
         print("\n" + "=" * 80)
-        print("GENERATION COMPLETE")
+        print("GENERATING INTERACTIVE HTML DASHBOARDS")
         print("=" * 80)
-        print(f"End time: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
-        print(f"Duration: {duration:.1f} seconds")
-        print(f"\nOutput location: {BASE_OUTPUT_DIR}/{{static,interactive}}/project_type_breakdown/")
+
+        for track_key in TRACKS.keys():
+            print(f"\nGenerating dashboard for {TRACKS[track_key]['label']}...")
+            
+            # Prepare data for both periods
+            df_10yr = self.get_filtered_data('2015-2024', track_key)
+            df_5yr = self.get_filtered_data('2020-2024', track_key)
+            
+            # Create dashboard
+            self.create_interactive_dashboard(df_10yr, df_5yr, track_key)
+            
+    def create_interactive_dashboard(self, df_10yr, df_5yr, track_key):
+        """Create interactive dashboard with period selection."""
+        
+        # Calculate metrics
+        def get_metrics(df):
+            projects = len(df['project_title'].unique()) if 'project_title' in df.columns else len(df)
+            investment = df['award_amount'].sum() if 'award_amount' in df.columns else 0
+            students = 0
+            student_cols = ['phd_students', 'ms_students', 'undergrad_students', 'postdoc_students']
+            for col in student_cols:
+                if col in df.columns:
+                    students += df[col].fillna(0).sum()
+            return projects, investment, students
+
+        p10, i10, s10 = get_metrics(df_10yr)
+        p5, i5, s5 = get_metrics(df_5yr)
+        
+        # Create figure
+        fig = make_subplots(
+            rows=2, cols=2,
+            specs=[[{"type": "indicator"}, {"type": "indicator"}],
+                   [{"type": "bar"}, {"type": "scatter"}]],
+            subplot_titles=("Key Metrics", "Student Impact", "Investment Distribution", "Projects by Year"),
+            vertical_spacing=0.15
+        )
+        
+        # Add indicators (using 10-year as default)
+        fig.add_trace(go.Indicator(
+            mode="number+delta",
+            value=i10,
+            title={"text": "Total Investment"},
+            number={'prefix': "$", 'valueformat': ",.0f"},
+            delta={'reference': i5, 'relative': False, 'valueformat': ",.0f", 'position': "bottom"},
+            domain={'row': 0, 'column': 0}
+        ))
+        
+        fig.add_trace(go.Indicator(
+            mode="number+delta",
+            value=s10,
+            title={"text": "Students Trained"},
+            delta={'reference': s5, 'relative': False, 'position': "bottom"},
+            domain={'row': 0, 'column': 1}
+        ))
+        
+        # Add charts (using 10-year data initially)
+        # Investment by Year
+        if 'year' in df_10yr.columns:
+            yearly_10 = df_10yr.groupby('year')['award_amount'].sum().reset_index()
+            fig.add_trace(go.Bar(
+                x=yearly_10['year'], y=yearly_10['award_amount'],
+                name='Investment', marker_color=IWRC_COLORS['primary']
+            ), row=2, col=1)
+            
+            projects_10 = df_10yr.groupby('year')['project_title'].count().reset_index()
+            fig.add_trace(go.Scatter(
+                x=projects_10['year'], y=projects_10['project_title'],
+                name='Projects', mode='lines+markers', line=dict(color=IWRC_COLORS['secondary'])
+            ), row=2, col=2)
+
+        # Apply styling
+        apply_iwrc_plotly_style(fig)
+        
+        # Update layout
+        fig.update_layout(
+            title_text=f"<b>{TRACKS[track_key]['label']} Dashboard</b><br><sub>{TRACKS[track_key]['description']}</sub>",
+            height=800
+        )
+        
+        # Save
+        filename = f"project_type_breakdown_{track_key.lower()}.html"
+        # Output to interactive/project_type_breakdown/
+        output_dir = Path(BASE_OUTPUT_DIR) / 'interactive' / 'project_type_breakdown'
+        output_dir.mkdir(parents=True, exist_ok=True)
+        output_path = output_dir / filename
+        
+        fig.write_html(output_path)
+        print(f"✓ Created: {output_path}")
+
+
 
 
 # ============================================================================

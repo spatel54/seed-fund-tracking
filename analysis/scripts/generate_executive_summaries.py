@@ -42,7 +42,7 @@ from iwrc_data_loader import IWRCDataLoader
 from iwrc_brand_style import IWRC_COLORS
 
 PROJECT_ROOT = '/Users/shivpat/seed-fund-tracking'
-OUTPUT_DIR = os.path.join(PROJECT_ROOT, 'FINAL_DELIVERABLES 2/reports')
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, 'deliverables_final/reports/executive')
 
 # Try to register Montserrat font
 FONT_REGISTERED = False

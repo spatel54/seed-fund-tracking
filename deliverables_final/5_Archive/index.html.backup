@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IWRC Seed Fund Tracking & Analysis System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #258372 0%, #1a5f52 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #258372 0%, #3fa890 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.95;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        /* Content */
+        .content {
+            padding: 50px 40px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .intro h2 {
+            color: #258372;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .intro p {
+            font-size: 1.1em;
+            color: #54595F;
+            line-height: 1.7;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Navigation Grid */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(37, 131, 114, 0.2);
+            border-color: #258372;
+        }
+
+        .nav-card-header {
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-bottom: 4px solid #258372;
+        }
+
+        .nav-card-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+        }
+
+        .nav-card h3 {
+            font-size: 1.5em;
+            color: #258372;
+            margin-bottom: 10px;
+        }
+
+        .nav-card-description {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .nav-card-body {
+            padding: 25px 30px;
+        }
+
+        .nav-card-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .nav-card-features li {
+            padding: 8px 0;
+            color: #555;
+            font-size: 0.9em;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .nav-card-features li:before {
+            content: "✓";
+            color: #2ca02c;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .nav-card-link {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #258372 0%, #3fa890 100%);
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-card-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(37, 131, 114, 0.3);
+        }
+
+        /* Quick Links */
+        .quick-links {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            border-left: 5px solid #258372;
+            margin-bottom: 40px;
+        }
+
+        .quick-links h3 {
+            color: #258372;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+        }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .quick-link-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .quick-link-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .quick-link-item a {
+            color: #258372;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        .quick-link-item a:hover {
+            color: #3fa890;
+        }
+
+        .quick-link-desc {
+            color: #666;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #f8f9fa;
+            padding: 30px 40px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+
+        .footer strong {
+            color: #258372;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header .subtitle {
+                font-size: 1.1em;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .quick-links {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <img src="assets/branding/logos/IWRC_Logo.svg" alt="IWRC Logo" class="logo">
+            <h1>Illinois Water Resources Center</h1>
+            <p class="subtitle">Seed Fund Tracking & Analysis System</p>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-value">77</span>
+                    <span class="stat-label">Projects<br>(2015-2024)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">$8.5M</span>
+                    <span class="stat-label">Total Investment<br>(10 Years)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">304</span>
+                    <span class="stat-label">Students Supported<br>(2015-2024)</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value">14</span>
+                    <span class="stat-label">Illinois Institutions<br>Funded</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="intro">
+                <h2>Welcome to the IWRC Seed Fund Repository</h2>
+                <p>
+                    This comprehensive repository contains all data, analysis, reports, and visualizations for the
+                    Illinois Water Resources Center Seed Fund program. Navigate through our organized sections below
+                    to access executive summaries, detailed reports, interactive dashboards, source data, and analysis code.
+                </p>
+            </div>
+
+            <!-- Navigation Cards -->
+            <div class="nav-grid">
+                <!-- Deliverables Card -->
+                <a href="deliverables_final/" class="nav-card">
+                    <div class="nav-card-header">
+                        <div class="nav-card-icon">📊</div>
+                        <h3>Deliverables</h3>
+                        <p class="nav-card-description">Reports, visualizations, and all final outputs</p>
+                    </div>
+                    <div class="nav-card-body">
+                        <ul class="nav-card-features">
+                            <li>95+ files organized in 5 categories</li>
+                            <li>Executive & detailed PDF reports</li>
+                            <li>Static & interactive visualizations</li>
+                            <li>Excel data files & archive</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Data Card -->
+                <a href="data/" class="nav-card">
+                    <div class="nav-card-header">
+                        <div class="nav-card-icon">📁</div>
+                        <h3>Data</h3>
+                        <p class="nav-card-description">Source files and consolidated datasets</p>
+                    </div>
+                    <div class="nav-card-body">
+                        <ul class="nav-card-features">
+                            <li>Original FY reports (2016-2024)</li>
+                            <li>Consolidated tracking database</li>
+                            <li>Analysis output files</li>
+                            <li>GeoJSON for mapping</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Analysis Card -->
+                <a href="analysis/" class="nav-card">
+                    <div class="nav-card-header">
+                        <div class="nav-card-icon">🔬</div>
+                        <h3>Analysis</h3>
+                        <p class="nav-card-description">Jupyter notebooks and Python scripts</p>
+                    </div>
+                    <div class="nav-card-body">
+                        <ul class="nav-card-features">
+                            <li>7 analysis Jupyter notebooks</li>
+                            <li>44 Python generation scripts</li>
+                            <li>ROI calculations & visualizations</li>
+                            <li>Automated report generation</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Assets Card -->
+                <a href="assets/" class="nav-card">
+                    <div class="nav-card-header">
+                        <div class="nav-card-icon">🎨</div>
+                        <h3>Assets</h3>
+                        <p class="nav-card-description">Branding, logos, fonts, and styles</p>
+                    </div>
+                    <div class="nav-card-body">
+                        <ul class="nav-card-features">
+                            <li>IWRC logos (PNG & SVG)</li>
+                            <li>Montserrat fonts (Regular & Bold)</li>
+                            <li>Complete branding guidelines</li>
+                            <li>Shared CSS theme</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Documentation Card -->
+                <a href="docs/" class="nav-card">
+                    <div class="nav-card-header">
+                        <div class="nav-card-icon">📚</div>
+                        <h3>Documentation</h3>
+                        <p class="nav-card-description">Guides, methodology, and technical docs</p>
+                    </div>
+                    <div class="nav-card-body">
+                        <ul class="nav-card-features">
+                            <li>Analysis methodology</li>
+                            <li>Data dictionary</li>
+                            <li>User guides & tutorials</li>
+                            <li>Technical documentation</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- GitHub Card -->
+                <a href="README.md" class="nav-card">
+                    <div class="nav-card-header">
+                        <div class="nav-card-icon">📖</div>
+                        <h3>Repository Info</h3>
+                        <p class="nav-card-description">README and project overview</p>
+                    </div>
+                    <div class="nav-card-body">
+                        <ul class="nav-card-features">
+                            <li>Project overview</li>
+                            <li>Repository structure</li>
+                            <li>Getting started guide</li>
+                            <li>Contact information</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Admin Card -->
+                <a href="admin/" class="nav-card">
+                    <div class="nav-card-header">
+                        <div class="nav-card-icon">⚙️</div>
+                        <h3>Admin</h3>
+                        <p class="nav-card-description">Project documentation and guides</p>
+                    </div>
+                    <div class="nav-card-body">
+                        <ul class="nav-card-features">
+                            <li>Claude documentation</li>
+                            <li>Corrected files index</li>
+                            <li>Reorganization summary</li>
+                            <li>Project history</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <!-- Archive Card -->
+                <a href="deliverables_archive_20251128/" class="nav-card">
+                    <div class="nav-card-header">
+                        <div class="nav-card-icon">📦</div>
+                        <h3>Archive</h3>
+                        <p class="nav-card-description">Previous deliverables version (Nov 2024)</p>
+                    </div>
+                    <div class="nav-card-body">
+                        <ul class="nav-card-features">
+                            <li>Historical deliverables</li>
+                            <li>Previous reports & visualizations</li>
+                            <li>Legacy documentation</li>
+                            <li>Version reference</li>
+                        </ul>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="quick-links">
+                <h3>🚀 Quick Access</h3>
+                <div class="quick-links-grid">
+                    <div class="quick-link-item">
+                        <a href="deliverables_final/index.html">Deliverables Hub</a>
+                        <p class="quick-link-desc">Interactive navigation for all deliverables</p>
+                    </div>
+                    <div class="quick-link-item">
+                        <a href="deliverables_final/1_Executive_Reports/IWRC_Executive_Summary_All_Projects.pdf">Executive Summary PDF</a>
+                        <p class="quick-link-desc">High-level program overview</p>
+                    </div>
+                    <div class="quick-link-item">
+                        <a href="deliverables_final/2_Detailed_Reports/IWRC_Analysis_Deep_Dive.pdf">Deep Dive Analysis</a>
+                        <p class="quick-link-desc">Comprehensive detailed report</p>
+                    </div>
+                    <div class="quick-link-item">
+                        <a href="deliverables_final/3_Data_Files/IWRC_ROI_Analysis_Summary_CORRECTED.xlsx">Main Dataset</a>
+                        <p class="quick-link-desc">ROI analysis and tracking data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Illinois Water Resources Center (IWRC)</strong></p>
+            <p>Seed Fund Tracking & Analysis System</p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                Last Updated: November 28, 2024 | Data Period: 2015-2024
+            </p>
+            <p style="font-size: 0.85em; margin-top: 10px; opacity: 0.8;">
+                Repository reorganized for improved navigation and accessibility
+            </p>
+        </div>
+    </div>
+</body>
+</html>

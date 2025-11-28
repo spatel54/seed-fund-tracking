@@ -4,7 +4,15 @@
 
 ## 🎯 Quick Start
 
-**[Open Navigation Hub](index.html)** - Professional IWRC-branded interface to browse all content
+**[Open Navigation Hub](index.html)** - Modern, dynamic IWRC-branded interface to browse all content
+
+### ✨ New: Dynamic Updates
+The repository now features automatic data updates and a modern UI. See [Dynamic Updates Guide](docs/DYNAMIC_UPDATES_GUIDE.md) for details.
+
+```bash
+# Update repository metadata after changes
+python3 scripts/update_repo_metadata.py
+```
 
 ## 📊 Repository Overview
 
@@ -14,7 +22,7 @@ This repository contains:
 - **304 students** supported
 - **14 Illinois institutions** funded
 
-### November 2025 - Major Repository Reorganization
+### November 2025 - Major Repository Reorganization & Dynamic System
 
 The repository has been completely reorganized with improved structure, IWRC branding, and comprehensive navigation:
 
@@ -22,23 +30,26 @@ The repository has been completely reorganized with improved structure, IWRC bra
 ✅ **IWRC Branding** - Professional branded index pages and CSS theme
 ✅ **Comprehensive Documentation** - README.md in every major folder
 ✅ **45% Size Reduction** - Removed 128 MB of duplicates (282 MB → 154 MB)
-✅ **Improved Navigation** - Card-based navigation hubs with breadcrumbs
+✅ **Dynamic Updates** - Automatic metadata updates and modern responsive UI
+✅ **Improved Navigation** - Card-based navigation hubs with smooth animations
 
 ## 📁 Repository Structure
 
 ```
 seed-fund-tracking/
-├── index.html                    # 🏠 Main navigation hub (START HERE)
+├── index.html                    # 🏠 Main navigation hub (START HERE - Dynamic)
 ├── README.md                     # This file
 │
-├── deliverables/                 # 📊 All final outputs
+├── config/                       # ⚙️ Configuration
+│   └── repo-metadata.json        # Dynamic metadata for index.html
+│
+├── deliverables_final/           # 📊 All final outputs
 │   ├── index.html                # Deliverables navigation
-│   ├── reports/                  # 6 PDF reports
-│   │   ├── executive/            # Executive summary, fact sheet, financial
-│   │   └── detailed/             # Detailed analysis, project breakdowns
-│   └── visualizations/           # Charts and dashboards
-│       ├── static/               # 36 PNG charts (by category)
-│       └── interactive/          # 15 HTML dashboards
+│   ├── 1_Executive_Reports/      # Executive summaries
+│   ├── 2_Detailed_Reports/       # In-depth analysis
+│   ├── 3_Data_Files/             # Excel data files
+│   ├── 4_Visualizations/         # Static & interactive charts
+│   └── 5_Archive/                # Historical versions
 │
 ├── data/                         # 📁 Source and processed data
 │   ├── source/                   # Original FY reports
@@ -46,14 +57,18 @@ seed-fund-tracking/
 │   └── outputs/                  # Analysis results
 │
 ├── analysis/                     # 🔬 Analysis code
-│   ├── notebooks/                # 7 Jupyter notebooks
-│   └── scripts/                  # 44 Python scripts
+│   ├── notebooks/                # 8 Jupyter notebooks
+│   └── scripts/                  # 42+ Python scripts
+│
+├── scripts/                      # 🔧 Utility scripts
+│   └── update_repo_metadata.py   # Auto-update metadata
 │
 ├── assets/                       # 🎨 Branding and design
 │   ├── branding/                 # Logos, fonts, guidelines
 │   └── styles/                   # Shared CSS theme
 │
-└── docs/                         # 📚 Documentation (22 files)
+└── docs/                         # 📚 Documentation (23 files)
+    └── DYNAMIC_UPDATES_GUIDE.md  # Dynamic system guide
 ```
 
 ## 🚀 Quick Access
@@ -169,7 +184,7 @@ See [IWRC_BRANDING_GUIDELINES.md](assets/branding/IWRC_BRANDING_GUIDELINES.md) f
 
 ### Update Procedure
 1. Add new FY report to `data/source/`
-2. Update `data/consolidated/IWRC Seed Fund Tracking.xlsx`
+2. Update `data/processed/clean_iwrc_tracking.xlsx`
 3. Run analysis notebooks in `analysis/notebooks/current/`
 4. Regenerate deliverables with scripts in `analysis/scripts/`
 

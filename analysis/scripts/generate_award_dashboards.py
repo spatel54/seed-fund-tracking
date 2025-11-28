@@ -48,7 +48,7 @@ FONT_FAMILY = "Montserrat, Arial, sans-serif"
 
 # Paths
 BASE_DIR = Path("/Users/shivpat/seed-fund-tracking")
-OUTPUT_DIR = BASE_DIR / "deliverables/visualizations/interactive/project_types"
+OUTPUT_DIR = BASE_DIR / "deliverables_final/visualizations/interactive/project_types"
 LOGO_PATH = BASE_DIR / "IWRC Logo - Full Color.svg"
 
 # Create output directory

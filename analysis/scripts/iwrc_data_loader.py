@@ -70,7 +70,8 @@ class IWRCDataLoader:
             project_root = '/Users/shivpat/seed-fund-tracking'
 
         self.project_root = Path(project_root)
-        self.master_file = self.project_root / 'data/consolidated/IWRC Seed Fund Tracking.xlsx'
+        # UPDATED: Pointing to the new cleaned and deduplicated dataset
+        self.master_file = self.project_root / 'data/processed/clean_iwrc_tracking.xlsx'
         self.fact_sheet_file = self.project_root / 'data/consolidated/fact sheet data.xlsx'
 
         # Column mapping with trailing space handling
@@ -131,9 +132,15 @@ class IWRCDataLoader:
         df = self._standardize_institution_names(df)
 
         if deduplicate:
-            print(f"✓ Loaded {len(df)} rows from master file")
+            # The source file is already deduplicated, but we keep this check for safety
+            # and to handle any potential future duplicates if the file is manually edited.
+            initial_count = len(df)
             df = self._deduplicate_by_project(df)
-            print(f"✓ Deduplicated to {len(df)} unique projects")
+            final_count = len(df)
+            if initial_count != final_count:
+                print(f"✓ Loaded {initial_count} rows, deduplicated to {final_count} unique projects")
+            else:
+                print(f"✓ Loaded {final_count} unique projects (already clean)")
         else:
             warnings.warn(
                 "⚠️  Loading data WITHOUT deduplication! "

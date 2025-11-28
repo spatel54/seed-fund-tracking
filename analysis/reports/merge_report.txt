@@ -1,0 +1,13 @@
+Consolidation Report
+====================
+
+Base File: /Users/shivpat/seed-fund-tracking/data/source/IWRC Seed Fund Tracking August 2025 Update.xlsx
+Total Rows in Combined Data: 124
+Unique Project IDs: 124
+Projects with Grant Info: 13
+
+Source Files Merged:
+- /Users/shivpat/seed-fund-tracking/data/source/FY23_reporting_IL.xlsx
+- /Users/shivpat/seed-fund-tracking/data/source/FY24_reporting_IL.xlsx
+- /Users/shivpat/seed-fund-tracking/data/source/IL_5yr_FY16_20_2.xlsx
+- /Users/shivpat/seed-fund-tracking/data/source/IWRC-2022-WRRA-Annual-Report-v.101923.xlsx

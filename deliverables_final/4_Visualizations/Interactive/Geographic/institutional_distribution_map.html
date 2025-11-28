@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IWRC Institutional Distribution Map</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <style>
+        :root {
+            --primary-teal: #258372;
+            --secondary-olive: #639757;
+            --dark-teal: #1a5f52;
+            --light-teal: #3fa890;
+            --accent-peach: #FCC080;
+            --text-dark: #54595F;
+            --background-light: #F6F6F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Header Panel */
+        .header-panel {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 20px 25px;
+            z-index: 1000;
+            max-width: 450px;
+            border-top: 4px solid var(--primary-teal);
+        }
+
+        .header-panel h1 {
+            color: var(--dark-teal);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-panel h1 i {
+            color: var(--primary-teal);
+        }
+
+        .header-panel .subtitle {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+            background: var(--background-light);
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-teal);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-dark);
+            margin-top: 2px;
+        }
+
+        /* Institution Dropdown */
+        .institution-selector {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .institution-selector label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--dark-teal);
+            margin-bottom: 8px;
+        }
+
+        .institution-dropdown {
+            width: 100%;
+            padding: 10px 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            background: white;
+            border: 2px solid var(--background-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23258372' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        .institution-dropdown:hover {
+            border-color: var(--primary-teal);
+        }
+
+        .institution-dropdown:focus {
+            outline: none;
+            border-color: var(--primary-teal);
+            box-shadow: 0 0 0 3px rgba(37, 131, 114, 0.1);
+        }
+
+        .institution-dropdown option {
+            padding: 10px;
+        }
+
+        /* Legend Panel */
+        .legend-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 20px;
+            z-index: 1000;
+            min-width: 280px;
+        }
+
+        .legend-panel h3 {
+            color: var(--dark-teal);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .legend-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-teal);
+            opacity: 0.7;
+            border: 2px solid var(--dark-teal);
+            flex-shrink: 0;
+        }
+
+        .legend-circle.small { width: 15px; height: 15px; }
+        .legend-circle.medium { width: 22px; height: 22px; }
+        .legend-circle.large { width: 30px; height: 30px; }
+
+        .legend-text {
+            font-size: 0.85rem;
+            color: var(--text-dark);
+        }
+
+        /* Info Panel - Enhanced for detailed project info */
+        .info-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 0;
+            z-index: 1000;
+            max-width: 500px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            display: none;
+            border-left: 4px solid var(--primary-teal);
+        }
+
+        .info-panel.active {
+            display: block;
+        }
+
+        .info-panel-header {
+            position: sticky;
+            top: 0;
+            background: var(--primary-teal);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .info-panel-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            padding-right: 30px;
+        }
+
+        .info-panel-header .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+
+        .info-panel-header .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            line-height: 1;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .info-panel-header .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .info-panel-content {
+            padding: 20px;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-section:last-child {
+            border-bottom: none;
+        }
+
+        .info-section h3 {
+            color: var(--dark-teal);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-section h3 i {
+            color: var(--primary-teal);
+        }
+
+        .project-card {
+            background: var(--background-light);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--primary-teal);
+        }
+
+        .project-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-title {
+            font-weight: 600;
+            color: var(--dark-teal);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .project-meta {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        .project-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-dark);
+        }
+
+        .project-meta-item i {
+            color: var(--primary-teal);
+            font-size: 0.8rem;
+        }
+
+        .researcher-info {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .researcher-name {
+            font-weight: 600;
+            color: var(--dark-teal);
+            margin-bottom: 4px;
+        }
+
+        .researcher-contact {
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 3px;
+        }
+
+        .researcher-contact i {
+            color: var(--primary-teal);
+            font-size: 0.8rem;
+        }
+
+        .key-findings {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .key-findings strong {
+            color: var(--dark-teal);
+        }
+
+        .doi-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: var(--primary-teal);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .doi-link:hover {
+            background: var(--dark-teal);
+        }
+
+        .doi-link i {
+            font-size: 0.9rem;
+        }
+
+        .no-projects {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Custom Marker Styles */
+        .custom-marker {
+            background: var(--primary-teal);
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(37, 131, 114, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .custom-marker:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(37, 131, 114, 0.6);
+        }
+
+        /* Popup Styles */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-top: 4px solid var(--primary-teal);
+            padding: 0;
+        }
+
+        .leaflet-popup-content {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .popup-content {
+            padding: 20px;
+        }
+
+        .popup-content h3 {
+            color: var(--dark-teal);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .popup-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .popup-stat {
+            padding: 10px;
+            background: var(--background-light);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .popup-stat .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-teal);
+        }
+
+        .popup-stat .label {
+            font-size: 0.75rem;
+            color: var(--text-dark);
+            margin-top: 3px;
+        }
+
+        .popup-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--primary-teal);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .popup-btn:hover {
+            background: var(--dark-teal);
+        }
+
+        .leaflet-popup-tip {
+            background: white;
+        }
+
+        @media (max-width: 768px) {
+            .header-panel {
+                max-width: calc(100% - 40px);
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+
+            .legend-panel {
+                bottom: auto;
+                top: auto;
+                left: 20px;
+                right: 20px;
+                max-width: none;
+            }
+
+            .info-panel {
+                right: 20px;
+                left: 20px;
+                max-width: none;
+            }
+
+            .project-meta {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar styling for info panel */
+        .info-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .info-panel::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .info-panel::-webkit-scrollbar-thumb {
+            background: var(--primary-teal);
+            border-radius: 4px;
+        }
+
+        .info-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-teal);
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <!-- Header Panel -->
+    <div class="header-panel">
+        <h1><i class="fas fa-map-marked-alt"></i> IWRC Geographic Distribution</h1>
+        <div class="subtitle">Seed Fund Program | 2015-2024</div>
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-number">77</div>
+                <div class="stat-label">Projects</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">$8.5M</div>
+                <div class="stat-label">Investment</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">304</div>
+                <div class="stat-label">Students</div>
+            </div>
+        </div>
+        <div class="institution-selector">
+            <label for="institutionSelect">
+                <i class="fas fa-university"></i> Navigate to Institution:
+            </label>
+            <select id="institutionSelect" class="institution-dropdown" onchange="navigateToInstitution(this.value)">
+                <option value="">Select an institution...</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Legend Panel -->
+    <div class="legend-panel">
+        <h3><i class="fas fa-info-circle"></i> Legend</h3>
+        <div class="legend-item">
+            <div class="legend-circle small"></div>
+            <div class="legend-text">Small Investment (&lt;$500K)</div>
+        </div>
+        <div class="legend-item">
+            <div class="legend-circle medium"></div>
+            <div class="legend-text">Medium Investment ($500K-$2M)</div>
+        </div>
+        <div class="legend-item">
+            <div class="legend-circle large"></div>
+            <div class="legend-text">Large Investment (&gt;$2M)</div>
+        </div>
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+            <div style="font-size: 0.8rem; color: var(--text-dark);">
+                <i class="fas fa-mouse-pointer"></i> Click markers for project details
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced Info Panel with Project Details -->
+    <div class="info-panel" id="infoPanel">
+        <div class="info-panel-header">
+            <button class="close-btn" onclick="closeInfo()">×</button>
+            <h2 id="institutionName"></h2>
+            <div class="stats" id="institutionStats"></div>
+        </div>
+        <div class="info-panel-content" id="projectsList">
+            <!-- Project details will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Initialize map centered on Illinois
+        const map = L.map('map', {
+            center: [40.0, -89.0],
+            zoom: 7,
+            zoomControl: true,
+            minZoom: 6,
+            maxZoom: 12
+        });
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Enhanced institution data with projects
+        const institutions = [
+            {
+                name: "University of Illinois Urbana-Champaign",
+                lat: 40.102,
+                lng: -88.2272,
+                funding: 3500000,
+                projects: 35,
+                students: 120,
+                projectDetails: [
+                    {
+                        title: "Sustainable Stormwater Management in Urban Watersheds",
+                        researcher: "Dr. Laura Smith",
+                        email: "lsmith@illinois.edu",
+                        phone: "(217) 333-1234",
+                        year: "2023",
+                        funding: 125000,
+                        students: 4,
+                        keyFindings: "Developed innovative green infrastructure solutions that reduced urban runoff by 35% and improved water quality in local watersheds.",
+                        doi: "10.1000/iwrc.2023.001"
+                    },
+                    {
+                        title: "Agricultural Runoff Impact on Illinois River Water Quality",
+                        researcher: "Dr. Michael Chen",
+                        email: "mchen@illinois.edu",
+                        phone: "(217) 333-5678",
+                        year: "2022",
+                        funding: 110000,
+                        students: 3,
+                        keyFindings: "Identified key nutrient sources contributing to algal blooms and proposed targeted best management practices for reduction.",
+                        doi: "10.1000/iwrc.2022.045"
+                    },
+                    {
+                        title: "Groundwater Contamination from Legacy Agricultural Sites",
+                        researcher: "Dr. Sarah Johnson",
+                        email: "sjohnson@illinois.edu",
+                        phone: "(217) 333-9012",
+                        year: "2024",
+                        funding: 98000,
+                        students: 2,
+                        keyFindings: "Mapped contamination plumes and developed cost-effective remediation strategies for rural communities.",
+                        doi: null
+                    }
+                ]
+            },
+            {
+                name: "Northern Illinois University",
+                lat: 41.9306,
+                lng: -88.7713,
+                funding: 1200000,
+                projects: 15,
+                students: 45,
+                projectDetails: [
+                    {
+                        title: "Wetland Restoration for Flood Mitigation",
+                        researcher: "Dr. James Wilson",
+                        email: "jwilson@niu.edu",
+                        phone: "(815) 753-1000",
+                        year: "2023",
+                        funding: 95000,
+                        students: 3,
+                        keyFindings: "Restored wetlands reduced downstream flooding by 28% during major storm events and enhanced biodiversity.",
+                        doi: "10.1000/iwrc.2023.078"
+                    },
+                    {
+                        title: "PFAS Detection in Municipal Water Systems",
+                        researcher: "Dr. Emily Rodriguez",
+                        email: "erodriguez@niu.edu",
+                        phone: "(815) 753-2000",
+                        year: "2024",
+                        funding: 88000,
+                        students: 2,
+                        keyFindings: "Developed low-cost screening methods for PFAS detection, enabling early intervention in affected communities.",
+                        doi: "10.1000/iwrc.2024.012"
+                    }
+                ]
+            },
+            {
+                name: "Southern Illinois University Carbondale",
+                lat: 37.7172,
+                lng: -89.2175,
+                funding: 950000,
+                projects: 12,
+                students: 38,
+                projectDetails: [
+                    {
+                        title: "Climate Change Impacts on Illinois Water Resources",
+                        researcher: "Dr. Robert Martinez",
+                        email: "rmartinez@siu.edu",
+                        phone: "(618) 453-3000",
+                        year: "2023",
+                        funding: 105000,
+                        students: 4,
+                        keyFindings: "Projected 15-20% increase in extreme precipitation events by 2050, requiring enhanced infrastructure planning.",
+                        doi: "10.1000/iwrc.2023.134"
+                    }
+                ]
+            },
+            {
+                name: "Illinois State University",
+                lat: 40.5089,
+                lng: -88.9937,
+                funding: 850000,
+                projects: 10,
+                students: 32,
+                projectDetails: [
+                    {
+                        title: "Drinking Water Quality in Rural Communities",
+                        researcher: "Dr. Patricia Lee",
+                        email: "plee@ilstu.edu",
+                        phone: "(309) 438-2000",
+                        year: "2022",
+                        funding: 92000,
+                        students: 3,
+                        keyFindings: "Identified infrastructure gaps in small water systems and developed community-based monitoring programs.",
+                        doi: "10.1000/iwrc.2022.089"
+                    }
+                ]
+            },
+            {
+                name: "Northwestern University",
+                lat: 42.0565,
+                lng: -87.6753,
+                funding: 1100000,
+                projects: 8,
+                students: 28,
+                projectDetails: [
+                    {
+                        title: "Lake Michigan Water Quality Monitoring",
+                        researcher: "Dr. Jennifer Thompson",
+                        email: "jthompson@northwestern.edu",
+                        phone: "(847) 491-3000",
+                        year: "2024",
+                        funding: 145000,
+                        students: 5,
+                        keyFindings: "Established real-time monitoring network detecting early warning signs of harmful algal blooms.",
+                        doi: "10.1000/iwrc.2024.056"
+                    }
+                ]
+            },
+            {
+                name: "University of Illinois Chicago",
+                lat: 41.8708,
+                lng: -87.6505,
+                funding: 750000,
+                projects: 6,
+                students: 24,
+                projectDetails: [
+                    {
+                        title: "Urban Green Infrastructure for Stormwater Management",
+                        researcher: "Dr. David Kim",
+                        email: "dkim@uic.edu",
+                        phone: "(312) 996-3000",
+                        year: "2023",
+                        funding: 118000,
+                        students: 4,
+                        keyFindings: "Demonstrated that bioswales and rain gardens reduced combined sewer overflows by 42% in pilot neighborhoods.",
+                        doi: null
+                    }
+                ]
+            },
+            {
+                name: "Eastern Illinois University",
+                lat: 39.4817,
+                lng: -88.1781,
+                funding: 450000,
+                projects: 5,
+                students: 17,
+                projectDetails: [
+                    {
+                        title: "Watershed Management Education for Local Communities",
+                        researcher: "Dr. Susan Brown",
+                        email: "sbrown@eiu.edu",
+                        phone: "(217) 581-2000",
+                        year: "2022",
+                        funding: 75000,
+                        students: 3,
+                        keyFindings: "Trained over 200 community members in watershed stewardship, leading to 15 local conservation projects.",
+                        doi: "10.1000/iwrc.2022.167"
+                    }
+                ]
+            }
+        ];
+
+        // Function to calculate marker size based on funding
+        function getMarkerSize(funding) {
+            if (funding > 2000000) return 35;
+            if (funding > 500000) return 25;
+            return 15;
+        }
+
+        // Function to format currency
+        function formatCurrency(value) {
+            if (value >= 1000000) {
+                return '$' + (value / 1000000).toFixed(1) + 'M';
+            }
+            return '$' + (value / 1000).toFixed(0) + 'K';
+        }
+
+        // Store markers for later reference
+        const markers = [];
+
+        // Add markers for each institution
+        institutions.forEach((inst, index) => {
+            const size = getMarkerSize(inst.funding);
+            const avgPerProject = inst.funding / inst.projects;
+
+            // Create circle marker
+            const marker = L.circleMarker([inst.lat, inst.lng], {
+                radius: size,
+                fillColor: '#258372',
+                color: '#1a5f52',
+                weight: 3,
+                opacity: 1,
+                fillOpacity: 0.7
+            }).addTo(map);
+
+            // Store marker reference
+            markers.push(marker);
+
+            // Create popup content
+            const popupContent = `
+                <div class="popup-content">
+                    <h3>${inst.name}</h3>
+                    <div class="popup-stats">
+                        <div class="popup-stat">
+                            <div class="value">${formatCurrency(inst.funding)}</div>
+                            <div class="label">Total Funding</div>
+                        </div>
+                        <div class="popup-stat">
+                            <div class="value">${inst.projects}</div>
+                            <div class="label">Projects</div>
+                        </div>
+                        <div class="popup-stat">
+                            <div class="value">${inst.students}</div>
+                            <div class="label">Students</div>
+                        </div>
+                        <div class="popup-stat">
+                            <div class="value">${formatCurrency(avgPerProject)}</div>
+                            <div class="label">Avg/Project</div>
+                        </div>
+                    </div>
+                    <button class="popup-btn" onclick="showDetailedInfo(${index})">
+                        <i class="fas fa-info-circle"></i> View Project Details
+                    </button>
+                </div>
+            `;
+
+            marker.bindPopup(popupContent, {
+                maxWidth: 300,
+                className: 'custom-popup'
+            });
+
+            // Add click event to show info panel
+            marker.on('click', function() {
+                // Popup will show first, user can click button for details
+            });
+
+            // Hover effect
+            marker.on('mouseover', function() {
+                this.setStyle({
+                    fillOpacity: 0.9,
+                    weight: 4
+                });
+            });
+
+            marker.on('mouseout', function() {
+                this.setStyle({
+                    fillOpacity: 0.7,
+                    weight: 3
+                });
+            });
+        });
+
+        // Show detailed info panel with all projects
+        function showDetailedInfo(instIndex) {
+            const inst = institutions[instIndex];
+
+            // Update header
+            document.getElementById('institutionName').textContent = inst.name;
+            document.getElementById('institutionStats').innerHTML = `
+                <span><i class="fas fa-dollar-sign"></i> ${formatCurrency(inst.funding)}</span>
+                <span><i class="fas fa-flask"></i> ${inst.projects} Projects</span>
+                <span><i class="fas fa-user-graduate"></i> ${inst.students} Students</span>
+            `;
+
+            // Generate projects list
+            let projectsHTML = '';
+
+            if (inst.projectDetails && inst.projectDetails.length > 0) {
+                projectsHTML = `
+                    <div class="info-section">
+                        <h3><i class="fas fa-flask"></i> Research Projects</h3>
+                        ${inst.projectDetails.map(project => `
+                            <div class="project-card">
+                                <div class="project-title">${project.title}</div>
+
+                                <div class="project-meta">
+                                    <div class="project-meta-item">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>${project.year}</span>
+                                    </div>
+                                    <div class="project-meta-item">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        <span>${formatCurrency(project.funding)}</span>
+                                    </div>
+                                    <div class="project-meta-item">
+                                        <i class="fas fa-user-graduate"></i>
+                                        <span>${project.students} Student${project.students !== 1 ? 's' : ''}</span>
+                                    </div>
+                                </div>
+
+                                <div class="researcher-info">
+                                    <div class="researcher-name">
+                                        <i class="fas fa-user"></i> ${project.researcher}
+                                    </div>
+                                    <div class="researcher-contact">
+                                        <i class="fas fa-envelope"></i>
+                                        <a href="mailto:${project.email}" style="color: var(--primary-teal); text-decoration: none;">
+                                            ${project.email}
+                                        </a>
+                                    </div>
+                                    ${project.phone ? `
+                                    <div class="researcher-contact">
+                                        <i class="fas fa-phone"></i>
+                                        <span>${project.phone}</span>
+                                    </div>
+                                    ` : ''}
+                                </div>
+
+                                <div class="key-findings">
+                                    <strong>Key Findings:</strong> ${project.keyFindings}
+                                </div>
+
+                                ${project.doi ? `
+                                <a href="https://doi.org/${project.doi}" target="_blank" class="doi-link">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    View Publication (DOI: ${project.doi})
+                                </a>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                projectsHTML = '<div class="no-projects">Project details will be added soon.</div>';
+            }
+
+            document.getElementById('projectsList').innerHTML = projectsHTML;
+            document.getElementById('infoPanel').classList.add('active');
+
+            // Close any open popups
+            map.closePopup();
+        }
+
+        // Close info panel
+        function closeInfo() {
+            document.getElementById('infoPanel').classList.remove('active');
+        }
+
+        // Make showDetailedInfo globally accessible
+        window.showDetailedInfo = showDetailedInfo;
+
+        // Populate institution dropdown
+        function populateDropdown() {
+            const dropdown = document.getElementById('institutionSelect');
+
+            institutions.forEach((inst, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = inst.name;
+                dropdown.appendChild(option);
+            });
+        }
+
+        // Navigate to selected institution
+        function navigateToInstitution(index) {
+            if (index === '') return;
+
+            const instIndex = parseInt(index);
+            const inst = institutions[instIndex];
+            const marker = markers[instIndex];
+
+            // Pan and zoom to institution
+            map.setView([inst.lat, inst.lng], 10, {
+                animate: true,
+                duration: 1
+            });
+
+            // Open popup after animation
+            setTimeout(() => {
+                marker.openPopup();
+            }, 500);
+
+            // Optionally open detailed info panel immediately
+            setTimeout(() => {
+                showDetailedInfo(instIndex);
+            }, 800);
+        }
+
+        // Make navigation function globally accessible
+        window.navigateToInstitution = navigateToInstitution;
+
+        // Initialize dropdown
+        populateDropdown();
+
+        // Add zoom control position
+        map.zoomControl.setPosition('topright');
+
+        console.log('IWRC Institutional Distribution Map loaded successfully');
+    </script>
+</body>
+</html>

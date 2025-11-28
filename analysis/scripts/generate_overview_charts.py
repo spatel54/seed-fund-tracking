@@ -43,9 +43,9 @@ else:
 
 # Output directories
 BASE_DIR = Path("/Users/shivpat/seed-fund-tracking")
-STATIC_DIR = BASE_DIR / "deliverables/visualizations/static"
-INTERACTIVE_DIR = BASE_DIR / "deliverables/visualizations/interactive"
-DATA_FILE = BASE_DIR / "data/consolidated/IWRC Seed Fund Tracking.xlsx"
+STATIC_DIR = BASE_DIR / "deliverables_final/visualizations/static"
+INTERACTIVE_DIR = BASE_DIR / "deliverables_final/visualizations/interactive"
+DATA_FILE = BASE_DIR / "data/processed/clean_iwrc_tracking.xlsx"
 
 # Create directories
 for subdir in ['overview', 'students', 'institutions', 'topics', 'awards']:
@@ -175,11 +175,27 @@ def calculate_metrics(df, period_name):
     print(f"  Investment/Project: ${metrics['investment_per_project']:,.2f}")
     print(f"  Investment/Student: ${metrics['investment_per_student']:,.2f}")
 
-    # ROI (estimated - would need follow-on funding analysis)
-    metrics['roi'] = 0.07  # 7% based on corrected calculations
-    metrics['followon'] = metrics['investment'] * metrics['roi']
+    # ROI Calculation
+    # Calculate follow-on funding from "Monetary Benefit..." column
+    follow_on_col = 'Monetary Benefit of Award or Achievement (if applicable; use NA if not applicable)'
+    
+    def clean_money(val):
+        if pd.isna(val): return 0.0
+        s = str(val).replace('$', '').replace(',', '').strip()
+        try:
+            return float(s)
+        except:
+            return 0.0
+            
+    if follow_on_col in df.columns:
+        metrics['followon'] = df.groupby('project_id')[follow_on_col].first().apply(clean_money).sum()
+    else:
+        metrics['followon'] = 0.0
+        
+    metrics['roi'] = metrics['followon'] / metrics['investment'] if metrics['investment'] > 0 else 0.0
+    
     print(f"  ROI: {metrics['roi']:.2%}")
-    print(f"  Follow-on (estimated): ${metrics['followon']:,.2f}")
+    print(f"  Follow-on: ${metrics['followon']:,.2f}")
 
     # Projects by year
     metrics['projects_by_year'] = df.groupby('project_year')['project_id'].nunique().to_dict()
@@ -389,6 +405,53 @@ def generate_top_institutions(metrics):
     plt.tight_layout()
     save_fig('top_institutions.png', 'institutions')
 
+def generate_investment_by_institution(metrics):
+    """Generate investment by institution chart"""
+    print("\nGenerating investment by institution...")
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    # Get 10-year data
+    df = metrics['df_10yr']
+    
+    # Filter out non-UI if needed, but user asked for general investment by institution
+    # However, usually we want to see who got the money.
+    # Group by institution and sum award amount
+    inst_funding = df.groupby('institution')['award_amount_numeric'].sum().sort_values(ascending=True)
+    
+    # Filter out top 10 or all? Usually top 10 if many
+    # If there are few (15), we can show all
+    # Let's show all but sorted
+    
+    # Create bars
+    bars = ax.barh(inst_funding.index, inst_funding.values, color=COLORS['primary'])
+
+    # Add labels
+    for bar in bars:
+        width = bar.get_width()
+        # Format as $X.XXM or $XXXK depending on size
+        if width >= 1e6:
+            label = f'${width/1e6:.2f}M'
+        else:
+            label = f'${width/1e3:.0f}K'
+            
+        ax.text(width + (inst_funding.max() * 0.01), bar.get_y() + bar.get_height()/2, 
+                label,
+                va='center', fontsize=10, fontweight='bold')
+
+    ax.set_xlabel('Total Funding ($)', fontsize=12, fontweight='bold')
+    ax.set_title('Total Investment by Institution (2015-2024)\n(Deduplicated by Project)',
+                 fontsize=14, fontweight='bold', pad=20)
+    
+    # Remove spines
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    
+    # Expand x-axis
+    ax.set_xlim(0, inst_funding.max() * 1.15)
+    
+    plt.tight_layout()
+    save_fig('investment_by_institution.png', 'institutions')
+
 def generate_institutional_reach(metrics):
     """Generate institutional reach comparison"""
     print("\nGenerating institutional reach...")
@@ -453,6 +516,10 @@ def generate_summary_dashboard(metrics):
                                   transform=ax.transAxes)
         ax.add_patch(rect)
 
+    # Add ROI Explanation
+    fig.text(0.5, 0.02, "ROI Multiplier = Total Follow-on Funding / Total Seed Investment", 
+             ha='center', fontsize=12, style='italic', color=COLORS['text'])
+
     plt.tight_layout()
     save_fig('summary_dashboard.png', 'overview')
 
@@ -482,6 +549,7 @@ def main():
     generate_student_distribution(metrics)
     generate_projects_by_year(metrics)
     generate_top_institutions(metrics)
+    generate_investment_by_institution(metrics)
     generate_institutional_reach(metrics)
     generate_summary_dashboard(metrics)
 

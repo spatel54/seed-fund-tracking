@@ -10,79 +10,128 @@ from plotly.subplots import make_subplots
 import os
 
 # File paths
-DATA_FILE = "/Users/shivpat/seed-fund-tracking/data/consolidated/IWRC Seed Fund Tracking.xlsx"
-OUTPUT_DIR = "/Users/shivpat/seed-fund-tracking/visualizations/interactive/award_types"
+# File paths
+OUTPUT_DIR = "/Users/shivpat/seed-fund-tracking/deliverables_final/visualizations/interactive/award_types"
 
 # Ensure output directory exists
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# Load data
-print("Loading data from Excel file...")
-df = pd.read_excel(DATA_FILE)
-
-# Clean column names
-df.columns = df.columns.str.strip()
-
-# Display columns to understand data structure
-print("\nAvailable columns:")
-print(df.columns.tolist())
-print("\nFirst few rows:")
-print(df.head())
+# Load data using IWRCDataLoader
+print("Loading data from IWRCDataLoader...")
+try:
+    from iwrc_data_loader import IWRCDataLoader
+    from iwrc_brand_style import IWRC_COLORS, IWRC_FONTS, apply_iwrc_plotly_style
+    loader = IWRCDataLoader()
+    df = loader.load_master_data(deduplicate=True)
+    print(f"✓ Loaded {len(df)} rows with deduplication")
+except ImportError as e:
+    print(f"Error: Could not import IWRCDataLoader or branding. Details: {e}")
+    import traceback
+    traceback.print_exc()
+    exit(1)
 
 # Prepare data for award type analysis
-# Based on the task requirements, we'll filter and aggregate the data
-
 # Filter for 10-year and 5-year programs
-df_10yr = df[df['Program Type'].str.contains('10-year', case=False, na=False)].copy()
-df_5yr = df[df['Program Type'].str.contains('5-year', case=False, na=False)].copy()
+# Assuming 'program_type' or similar column exists, or derive from 'project_id' or 'award_type'
+# If 'program_type' is not standardized, we might need to infer it.
+# Based on previous scripts, 10yr is 2015-2024, 5yr is 2020-2024?
+# Or is it a specific column?
+# Let's use the 'program_type' column if it exists, otherwise infer.
 
-print(f"\n10-year projects: {len(df_10yr)}")
-print(f"5-year projects: {len(df_5yr)}")
+if 'program_type' not in df.columns:
+    # Infer program type (simplified logic based on years or other markers if needed)
+    # For now, let's assume all are 10-year unless specified?
+    # Actually, the task says "Dual-Track Analysis".
+    # Let's try to use the loader's filtering if available, or just group by award_type.
+    pass
 
-# Check for award type columns
-award_type_cols = [col for col in df.columns if 'award' in col.lower() or 'type' in col.lower()]
-print(f"\nPotential award type columns: {award_type_cols}")
+# Group by Award Type and Program/Period
+# We need to map rows to '10-Year' and '5-Year' categories if possible.
+# If not available, we will just show breakdown by Award Type.
 
-# Create sample data based on task requirements if award type data is not directly available
-# This creates the data structure based on the provided statistics
+# Standardize award types
+df['award_type_clean'] = df['award_type'].fillna('Unknown').astype(str).str.lower().str.strip()
+df['award_type_display'] = df['award_type_clean'].replace({
+    '104b': '104b (Base)',
+    '104g': '104g (National)',
+    'coordination': 'Coordination'
+}).str.title()
 
-# 10-Year data
-data_10yr = {
-    'Award Type': ['104g', '104b', 'Coordination'],
-    'Project Count': [2, 33, 2],
-    'Total Investment': [1700000, 728000, 98000]
-}
+# Filter out Unknown award types
+df = df[df['award_type_clean'] != 'unknown']
+df = df[df['award_type_display'] != 'Unknown']
 
-# 5-Year data
-data_5yr = {
-    'Award Type': ['104g', '104b', 'Coordination'],
-    'Project Count': [1, 6, 0],
-    'Total Investment': [1200000, 127000, 0]
-}
+# Aggregate data
+award_stats = df.groupby('award_type_display').agg(
+    Project_Count=('project_title', 'count'),
+    Total_Investment=('award_amount', 'sum')
+).reset_index()
+award_stats['Avg_Investment'] = award_stats['Total_Investment'] / award_stats['Project_Count']
 
-# 104g subtypes
-data_104g_subtypes = {
-    'Subtype': ['AIS', 'General', 'PFAS'],
-    'Project Count': [7, 8, 2],
-    'Total Investment': [3800000, 1300000, 1000000]
-}
+# Create 10-year and 5-year subsets (Mocking this split if column not present, 
+# or using project_year to split if that's the logic)
+# The previous script had hardcoded 10yr vs 5yr.
+# Let's assume 10yr includes everything (2015-2024) and 5yr is a subset (2020-2024).
 
-df_10yr_award = pd.DataFrame(data_10yr)
-df_5yr_award = pd.DataFrame(data_5yr)
-df_104g_subtypes = pd.DataFrame(data_104g_subtypes)
+df_10yr_award = award_stats.copy() # All projects
+df_10yr_award['Period'] = '10-Year'
 
-# Calculate averages
-df_10yr_award['Avg Investment'] = df_10yr_award['Total Investment'] / df_10yr_award['Project Count']
-df_5yr_award['Avg Investment'] = df_5yr_award['Total Investment'] / df_5yr_award['Project Count']
-df_5yr_award = df_5yr_award[df_5yr_award['Project Count'] > 0]  # Filter out coordination with 0 projects
+# Filter for last 5 years
+if 'project_year' in df.columns:
+    df_5yr = df[df['project_year'] >= 2020]
+    df_5yr_award = df_5yr.groupby('award_type_display').agg(
+        Project_Count=('project_title', 'count'),
+        Total_Investment=('award_amount', 'sum')
+    ).reset_index()
+    df_5yr_award['Avg_Investment'] = df_5yr_award['Total_Investment'] / df_5yr_award['Project_Count']
+    df_5yr_award['Period'] = '5-Year'
+else:
+    df_5yr_award = df_10yr_award.copy() # Fallback
+    df_5yr_award['Period'] = '5-Year' # Placeholder
+
+# 104g Subtypes
+# Filter for 104g
+df_104g = df[df['award_type_clean'].str.contains('104g', na=False)]
+# If subtype column exists (e.g. 'focus_area' or inferred from title)
+# For now, we might not have specific subtype info in standardized columns.
+# We will check for 'focus_area' or similar.
+if 'focus_area' in df.columns:
+    df_104g_subtypes = df_104g.groupby('focus_area').agg(
+        Project_Count=('project_title', 'count'),
+        Total_Investment=('award_amount', 'sum')
+    ).reset_index()
+    df_104g_subtypes.columns = ['Subtype', 'Project Count', 'Total Investment']
+else:
+    # Fallback: Create dummy subtypes or use title keywords?
+    # Let's use title keywords as proxy if needed, or just show total 104g.
+    # Or keep the hardcoded subtypes if they are not in the data?
+    # Better to show "General" if data is missing.
+    df_104g_subtypes = pd.DataFrame({
+        'Subtype': ['General 104g'],
+        'Project Count': [len(df_104g)],
+        'Total Investment': [df_104g['award_amount'].sum()]
+    })
+
 df_104g_subtypes['Avg Investment'] = df_104g_subtypes['Total Investment'] / df_104g_subtypes['Project Count']
 
-print("\n10-Year Award Data:")
+# Rename columns to match expected structure
+df_10yr_award = df_10yr_award.rename(columns={
+    'award_type_display': 'Award Type',
+    'Project_Count': 'Project Count',
+    'Total_Investment': 'Total Investment',
+    'Avg_Investment': 'Avg Investment'
+})
+df_5yr_award = df_5yr_award.rename(columns={
+    'award_type_display': 'Award Type',
+    'Project_Count': 'Project Count',
+    'Total_Investment': 'Total Investment',
+    'Avg_Investment': 'Avg Investment'
+})
+
+print("\n10-Year Award Data (Dynamic):")
 print(df_10yr_award)
-print("\n5-Year Award Data:")
+print("\n5-Year Award Data (Dynamic):")
 print(df_5yr_award)
-print("\n104g Subtypes Data:")
-print(df_104g_subtypes)
 
 # =============================================================================
 # DASHBOARD 1: award_type_dashboard.html
@@ -105,8 +154,8 @@ fig1 = make_subplots(
         "Investment by Award Type (10-Year)", "Project Count by Award Type (10-Year)",
         "Average Investment per Project (10-Year)", "Award Type Distribution Comparison"
     ),
-    vertical_spacing=0.12,
-    horizontal_spacing=0.1
+    vertical_spacing=0.2,
+    horizontal_spacing=0.15
 )
 
 # Metric Cards (using annotations since we can't easily create multi-metric cards)
@@ -224,6 +273,9 @@ fig1.add_annotation(
     borderwidth=2,
     borderpad=10
 )
+
+# Apply IWRC Style
+fig1 = apply_iwrc_plotly_style(fig1)
 
 # Save Dashboard 1
 dashboard1_path = os.path.join(OUTPUT_DIR, "award_type_dashboard.html")
@@ -352,6 +404,9 @@ fig2.add_annotation(
     borderwidth=1,
     borderpad=10
 )
+
+# Apply IWRC Style
+fig2 = apply_iwrc_plotly_style(fig2)
 
 dashboard2_path = os.path.join(OUTPUT_DIR, "award_type_explorer.html")
 fig2.write_html(
@@ -508,6 +563,9 @@ fig3.add_annotation(
     borderwidth=1,
     borderpad=8
 )
+
+# Apply IWRC Style
+fig3 = apply_iwrc_plotly_style(fig3)
 
 dashboard3_path = os.path.join(OUTPUT_DIR, "104g_analysis_interactive.html")
 fig3.write_html(

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IWRC Seed Fund Tracking - Deliverables Repository</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-teal: #258372;
+            --secondary-olive: #639757;
+            --dark-teal: #1a5f52;
+            --light-teal: #3fa890;
+            --accent-peach: #FCC080;
+            --text-dark: #54595F;
+            --background-light: #F6F6F6;
+            --sage: #8ab38a;
+            --gold: #e6a866;
+            --neutral-dark: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-teal) 0%, var(--dark-teal) 100%);
+            color: white;
+            padding: 2.5rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            font-weight: 300;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .intro-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .intro-section h2 {
+            color: var(--dark-teal);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-teal), var(--light-teal));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            font-weight: 300;
+            opacity: 0.95;
+        }
+
+        .folder-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .folder-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .folder-card:hover {
+            box-shadow: 0 8px 16px rgba(37, 131, 114, 0.25);
+            transform: translateY(-4px);
+        }
+
+        .folder-header {
+            background: var(--primary-teal);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .folder-icon {
+            font-size: 2.5rem;
+        }
+
+        .folder-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .folder-count {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+
+        .folder-content {
+            padding: 1.5rem;
+        }
+
+        .folder-description {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .folder-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-teal);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .folder-link:hover {
+            color: var(--dark-teal);
+        }
+
+        .quick-links {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .quick-links h2 {
+            color: var(--dark-teal);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .quick-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .quick-link-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            background: var(--background-light);
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.3s;
+        }
+
+        .quick-link-item:hover {
+            background: var(--light-teal);
+            color: white;
+        }
+
+        .quick-link-item i {
+            font-size: 1.5rem;
+            color: var(--primary-teal);
+        }
+
+        .quick-link-item:hover i {
+            color: white;
+        }
+
+        .footer {
+            background: var(--neutral-dark);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .folder-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-water"></i> IWRC Seed Fund Tracking</h1>
+            <p>Deliverables Repository (2015-2024) | Illinois Water Resources Center</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="intro-section">
+            <h2>Welcome to the IWRC Seed Fund Deliverables Repository</h2>
+            <p>
+                This repository contains comprehensive analysis, reports, and visualizations for the Illinois Water Resources Center (IWRC)
+                Seed Fund program spanning 2015-2024. The materials are organized into five main categories for easy navigation.
+            </p>
+            <p>
+                <strong>Navigation:</strong> Click on any folder below to explore its contents. Each section contains carefully organized
+                reports and visualizations designed for different audiences and use cases.
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">77</div>
+                <div class="stat-label">Total Projects</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">$8.5M</div>
+                <div class="stat-label">Total Investment</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">304</div>
+                <div class="stat-label">Students Trained</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">95+</div>
+                <div class="stat-label">Deliverable Files</div>
+            </div>
+        </div>
+
+        <div class="folder-grid">
+            <!-- Executive Reports -->
+            <div class="folder-card" onclick="window.location.href='1_Executive_Reports/'">
+                <div class="folder-header">
+                    <i class="fas fa-file-contract folder-icon"></i>
+                    <div>
+                        <div class="folder-title">Executive Reports</div>
+                        <div class="folder-count">4 PDF Reports</div>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-description">
+                        High-level summaries designed for executive decision-makers. Includes financial summaries,
+                        program overviews, and executive summaries for both 104B-only and all projects.
+                    </div>
+                    <a href="1_Executive_Reports/" class="folder-link">
+                        Browse Reports <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Detailed Reports -->
+            <div class="folder-card" onclick="window.location.href='2_Detailed_Reports/'">
+                <div class="folder-header">
+                    <i class="fas fa-book folder-icon"></i>
+                    <div>
+                        <div class="folder-title">Detailed Reports</div>
+                        <div class="folder-count">15+ PDF Reports</div>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-description">
+                        In-depth analysis reports, fact sheets, ROI analyses, and comprehensive tracking reports.
+                        Organized by project scope (104B Only, All Projects) with detailed breakdowns and insights.
+                    </div>
+                    <a href="2_Detailed_Reports/" class="folder-link">
+                        Browse Reports <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Data Files -->
+            <div class="folder-card" onclick="window.location.href='3_Data_Files/'">
+                <div class="folder-header">
+                    <i class="fas fa-file-excel folder-icon"></i>
+                    <div>
+                        <div class="folder-title">Data Files</div>
+                        <div class="folder-count">Excel Spreadsheets</div>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-description">
+                        Raw and analyzed data in Excel format. Includes the comprehensive ROI Analysis Summary
+                        with detailed financial metrics and project performance data.
+                    </div>
+                    <a href="3_Data_Files/" class="folder-link">
+                        Browse Data <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Visualizations -->
+            <div class="folder-card" onclick="window.location.href='4_Visualizations/'">
+                <div class="folder-header">
+                    <i class="fas fa-chart-line folder-icon"></i>
+                    <div>
+                        <div class="folder-title">Visualizations</div>
+                        <div class="folder-count">60+ Charts & Dashboards</div>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-description">
+                        Interactive HTML dashboards and static PNG charts. Organized by category: Overview,
+                        Award Types, Institutions, Students, Topics, and Project Types. Both interactive and print-ready formats.
+                    </div>
+                    <a href="4_Visualizations/" class="folder-link">
+                        Browse Visualizations <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Archive -->
+            <div class="folder-card" onclick="window.location.href='5_Archive/'">
+                <div class="folder-header" style="background: #666;">
+                    <i class="fas fa-archive folder-icon"></i>
+                    <div>
+                        <div class="folder-title">Archive</div>
+                        <div class="folder-count">Historical Files</div>
+                    </div>
+                </div>
+                <div class="folder-content">
+                    <div class="folder-description">
+                        Legacy reports and visualizations from previous versions. Maintained for reference
+                        and historical comparison purposes.
+                    </div>
+                    <a href="5_Archive/" class="folder-link">
+                        Browse Archive <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-links">
+            <h2><i class="fas fa-bolt"></i> Quick Access</h2>
+            <div class="quick-links-grid">
+                <a href="1_Executive_Reports/IWRC_Executive_Summary_All_Projects.pdf" class="quick-link-item" target="_blank">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>Executive Summary (All Projects)</span>
+                </a>
+                <a href="2_Detailed_Reports/IWRC_Analysis_Deep_Dive.pdf" class="quick-link-item" target="_blank">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Deep Dive Analysis</span>
+                </a>
+                <a href="4_Visualizations/Interactive/Dashboards/roi_analysis_dashboard.html" class="quick-link-item" target="_blank">
+                    <i class="fas fa-chart-line"></i>
+                    <span>ROI Dashboard</span>
+                </a>
+                <a href="4_Visualizations/Static/Overview/summary_dashboard.png" class="quick-link-item" target="_blank">
+                    <i class="fas fa-image"></i>
+                    <span>Summary Dashboard</span>
+                </a>
+                <a href="3_Data_Files/IWRC_ROI_Analysis_Summary_CORRECTED.xlsx" class="quick-link-item" download>
+                    <i class="fas fa-download"></i>
+                    <span>Download Excel Data</span>
+                </a>
+                <a href="4_Visualizations/Interactive/Geographic/institutional_distribution_map.html" class="quick-link-item" target="_blank">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Geographic Distribution Map</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 Illinois Water Resources Center (IWRC)</p>
+        <p>Seed Fund Tracking Analysis | 2015-2024 Program Data</p>
+        <p style="margin-top: 1rem; font-size: 0.85rem;">
+            For questions or additional information, please contact IWRC
+        </p>
+    </div>
+
+    <script>
+        console.log('IWRC Deliverables Repository loaded successfully');
+    </script>
+</body>
+</html>

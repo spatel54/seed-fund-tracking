@@ -36,6 +36,8 @@ IWRC_COLORS = {
     'gold': '#e6a866',              # Gold - alternative accent
     'neutral_light': '#f5f5f5',     # Very light gray
     'neutral_dark': '#333333',      # Dark gray for text
+    'success': '#8ab38a',           # Sage green - success/follow-on
+    'purple': '#9467bd',            # Purple - additional category
 }
 
 # Extended palette for multi-series charts (8 colors)

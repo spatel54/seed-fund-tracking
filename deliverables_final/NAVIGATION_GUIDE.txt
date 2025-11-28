@@ -1,0 +1,128 @@
+================================================================================
+IWRC SEED FUND TRACKING - DELIVERABLES REPOSITORY
+Quick Navigation Guide
+================================================================================
+
+📂 FOLDER STRUCTURE (Numbered for Easy Access)
+================================================================================
+
+1_Executive_Reports/
+├── Purpose: High-level summaries for executives and stakeholders
+├── Contents: 4 PDF reports
+└── Use Case: Board presentations, funding requests, briefings
+
+2_Detailed_Reports/
+├── Purpose: In-depth analysis and comprehensive reports
+├── Contents: 15+ PDF reports organized by project scope
+├── Subfolders:
+│   ├── 104B_Only/ - Reports specific to 104B projects
+│   └── All_Projects/ - Reports covering all project types
+└── Use Case: Program management, detailed analysis, research
+
+3_Data_Files/
+├── Purpose: Raw and analyzed data in Excel format
+├── Contents: ROI Analysis Summary spreadsheet
+└── Use Case: Custom analysis, financial modeling, data exports
+
+4_Visualizations/
+├── Purpose: Charts, graphs, and interactive dashboards
+├── Subfolders:
+│   ├── Interactive/ - HTML dashboards
+│   │   ├── Award_Types/
+│   │   ├── Project_Types/
+│   │   ├── Dashboards/
+│   │   └── Geographic/
+│   └── Static/ - PNG images for presentations
+│       ├── Overview/
+│       ├── Award_Types/
+│       ├── Institutions/
+│       ├── Students/
+│       ├── Topics/
+│       └── Project_Types/
+└── Use Case: Presentations, reports, web content, print materials
+
+5_Archive/
+├── Purpose: Historical versions and legacy files
+├── Contents: Previous versions of reports and visualizations
+└── Use Case: Historical reference, version comparison
+
+================================================================================
+🚀 QUICK START
+================================================================================
+
+METHOD 1 - Web Interface (Recommended)
+--------------------------------------
+1. Open "index.html" in your web browser
+2. Use the search and filter features to find files
+3. Click any folder card to browse contents
+4. View or download files directly
+
+METHOD 2 - Direct File Access
+------------------------------
+1. Navigate to numbered folders (1-5)
+2. Browse subfolders as needed
+3. Open files directly
+
+METHOD 3 - Read Documentation
+------------------------------
+1. Open "README.md" for detailed documentation
+2. Review folder organization and contents
+
+================================================================================
+📌 MOST COMMONLY ACCESSED FILES
+================================================================================
+
+Executive Summary (All Projects)
+→ 1_Executive_Reports/IWRC_Executive_Summary_All_Projects.pdf
+
+Deep Dive Analysis
+→ 2_Detailed_Reports/IWRC_Analysis_Deep_Dive.pdf
+
+Interactive ROI Dashboard
+→ 4_Visualizations/Interactive/Dashboards/roi_analysis_dashboard.html
+
+Summary Dashboard Image
+→ 4_Visualizations/Static/Overview/summary_dashboard.png
+
+Excel Data File
+→ 3_Data_Files/IWRC_ROI_Analysis_Summary_CORRECTED.xlsx
+
+Geographic Map
+→ 4_Visualizations/Interactive/Geographic/institutional_distribution_map.html
+
+================================================================================
+💡 TIPS
+================================================================================
+
+✓ Folders are numbered 1-5 to appear in logical order
+✓ Use Interactive visualizations for live presentations
+✓ Use Static visualizations for PowerPoint and print
+✓ Executive Reports are concise (perfect for busy stakeholders)
+✓ Detailed Reports contain comprehensive analysis
+✓ Archive folder contains historical versions (not needed for current use)
+
+================================================================================
+📊 PROGRAM STATISTICS
+================================================================================
+
+Total Projects: 77
+Total Investment: $8.5M
+Students Trained: 304
+Time Period: 2015-2024
+Deliverable Files: 95+
+
+================================================================================
+🎨 FILE TYPES
+================================================================================
+
+📄 PDF  - Reports and printable documents
+📊 XLSX - Excel data files
+🌐 HTML - Interactive dashboards
+🖼️  PNG  - Static charts and images
+
+================================================================================
+
+For questions or additional information, contact:
+Illinois Water Resources Center (IWRC)
+
+Last Updated: November 2025

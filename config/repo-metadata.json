@@ -1,0 +1,138 @@
+{
+  "lastUpdated": "2025-11-28",
+  "stats": {
+    "projects": 77,
+    "totalInvestment": "$8.5M",
+    "students": 304,
+    "institutions": 14,
+    "dataPeriod": "2015-2024"
+  },
+  "navigation": [
+    {
+      "id": "deliverables",
+      "title": "Deliverables",
+      "icon": "📊",
+      "path": "deliverables_final/",
+      "description": "Reports, visualizations, and all final outputs",
+      "features": [
+        "87+ files organized in 5 categories",
+        "Executive & detailed PDF reports",
+        "Static & interactive visualizations",
+        "Excel data files & archive"
+      ]
+    },
+    {
+      "id": "data",
+      "title": "Data",
+      "icon": "📁",
+      "path": "data/",
+      "description": "Source files and consolidated datasets",
+      "features": [
+        "Original FY reports (2015-2024)",
+        "Consolidated tracking database",
+        "Analysis output files",
+        "GeoJSON for mapping"
+      ]
+    },
+    {
+      "id": "analysis",
+      "title": "Analysis",
+      "icon": "🔬",
+      "path": "analysis/",
+      "description": "Jupyter notebooks and Python scripts",
+      "features": [
+        "8 analysis Jupyter notebooks",
+        "42 Python generation scripts",
+        "ROI calculations & visualizations",
+        "Automated report generation"
+      ]
+    },
+    {
+      "id": "assets",
+      "title": "Assets",
+      "icon": "🎨",
+      "path": "assets/",
+      "description": "Branding, logos, fonts, and styles",
+      "features": [
+        "IWRC logos (PNG & SVG)",
+        "Montserrat fonts (Regular & Bold)",
+        "Complete branding guidelines",
+        "Shared CSS theme"
+      ]
+    },
+    {
+      "id": "docs",
+      "title": "Documentation",
+      "icon": "📚",
+      "path": "docs/",
+      "description": "Guides, methodology, and technical docs",
+      "features": [
+        "Analysis methodology",
+        "Data dictionary",
+        "User guides & tutorials",
+        "Technical documentation"
+      ]
+    },
+    {
+      "id": "readme",
+      "title": "Repository Info",
+      "icon": "📖",
+      "path": "README.md",
+      "description": "README and project overview",
+      "features": [
+        "Project overview",
+        "Repository structure",
+        "Getting started guide",
+        "Contact information"
+      ]
+    },
+    {
+      "id": "admin",
+      "title": "Admin",
+      "icon": "⚙️",
+      "path": "admin/",
+      "description": "Project documentation and guides",
+      "features": [
+        "Claude documentation",
+        "Corrected files index",
+        "Reorganization summary",
+        "Project history"
+      ]
+    },
+    {
+      "id": "archive",
+      "title": "Archive",
+      "icon": "📦",
+      "path": "deliverables_archive_20251128/",
+      "description": "Previous deliverables version (Nov 2024)",
+      "features": [
+        "Historical deliverables",
+        "Previous reports & visualizations",
+        "Legacy documentation",
+        "Version reference"
+      ]
+    }
+  ],
+  "quickLinks": [
+    {
+      "title": "Deliverables Hub",
+      "url": "deliverables_final/index.html",
+      "description": "Interactive navigation for all deliverables"
+    },
+    {
+      "title": "Executive Summary PDF",
+      "url": "deliverables_final/1_Executive_Reports/IWRC_Executive_Summary_All_Projects.pdf",
+      "description": "High-level program overview"
+    },
+    {
+      "title": "Deep Dive Analysis",
+      "url": "deliverables_final/2_Detailed_Reports/IWRC_Analysis_Deep_Dive.pdf",
+      "description": "Comprehensive detailed report"
+    },
+    {
+      "title": "Main Dataset",
+      "url": "deliverables_final/3_Data_Files/IWRC_ROI_Analysis_Summary_CORRECTED.xlsx",
+      "description": "ROI analysis and tracking data"
+    }
+  ]
+}
